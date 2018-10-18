@@ -1,23 +1,31 @@
 package jcarklin.co.za.bakingrecipes.repository.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
 import com.squareup.moshi.Json;
 
+@Entity(tableName = "recipe_steps")
 public class Step implements Parcelable
 {
-
+    @PrimaryKey
     @Json(name = "id")
     private Integer id;
+
     @Json(name = "shortDescription")
     private String shortDescription;
+
     @Json(name = "description")
     private String description;
+
     @Json(name = "videoURL")
     private String videoURL;
+
     @Json(name = "thumbnailURL")
     private String thumbnailURL;
+
     public final static Parcelable.Creator<Step> CREATOR = new Creator<Step>() {
 
 

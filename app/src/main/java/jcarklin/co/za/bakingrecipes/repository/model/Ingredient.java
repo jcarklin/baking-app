@@ -1,10 +1,12 @@
 package jcarklin.co.za.bakingrecipes.repository.model;
 
+import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
 import com.squareup.moshi.Json;
 
+@Entity(tableName = "ingredients")
 public class Ingredient implements Parcelable
 {
 
