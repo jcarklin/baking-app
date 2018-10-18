@@ -4,6 +4,7 @@ import java.util.List;
 
 import jcarklin.co.za.bakingrecipes.repository.api.BakingAppService;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
+import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -21,7 +22,7 @@ public class BakingAppRepository {
 
     private BakingAppService bakingAppService;
 
-    protected List<Recipe> recipesList;
+    protected List<RecipeComplete> recipesList;
 
     private BakingAppRepository() {
         setupNetworkApi();
@@ -50,9 +51,9 @@ public class BakingAppRepository {
     }
 
     private void getRecipes() {
-        bakingAppService.getRecipes().enqueue(new Callback<List<Recipe>>() {
+        bakingAppService.getRecipes().enqueue(new Callback<List<RecipeComplete>>() {
             @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+            public void onResponse(Call<List<RecipeComplete>> call, Response<List<RecipeComplete>> response) {
                 if(response.isSuccessful()) {
                     recipesList = response.body();
                 } else {
@@ -61,7 +62,7 @@ public class BakingAppRepository {
             }
 
             @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+            public void onFailure(Call<List<RecipeComplete>> call, Throwable t) {
 
             }
         });
