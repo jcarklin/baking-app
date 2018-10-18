@@ -1,5 +1,6 @@
 package jcarklin.co.za.bakingrecipes.repository.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
@@ -14,47 +15,26 @@ public class Step implements Parcelable
     @Json(name = "id")
     private Integer id;
 
+    @ColumnInfo(name = "short_description")
     @Json(name = "shortDescription")
     private String shortDescription;
 
+    @ColumnInfo(name = "description")
     @Json(name = "description")
     private String description;
 
+    @ColumnInfo(name = "video_url")
     @Json(name = "videoURL")
     private String videoURL;
 
+    @ColumnInfo(name = "thumbnail_url")
     @Json(name = "thumbnailURL")
     private String thumbnailURL;
 
-    public final static Parcelable.Creator<Step> CREATOR = new Creator<Step>() {
+    @ColumnInfo(name = "recipe_id")
+    private Integer recipeId;
 
 
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Step createFromParcel(Parcel in) {
-            return new Step(in);
-        }
-
-        public Step[] newArray(int size) {
-            return (new Step[size]);
-        }
-
-    }
-    ;
-
-    Step(Parcel in) {
-        this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.shortDescription = ((String) in.readValue((String.class.getClassLoader())));
-        this.description = ((String) in.readValue((String.class.getClassLoader())));
-        this.videoURL = ((String) in.readValue((String.class.getClassLoader())));
-        this.thumbnailURL = ((String) in.readValue((String.class.getClassLoader())));
-    }
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
     public Step() {
     }
 
@@ -75,17 +55,22 @@ public class Step implements Parcelable
         this.thumbnailURL = thumbnailURL;
     }
 
+    private Step(Parcel in) {
+        this.id = in.readInt();
+        this.shortDescription = in.readString();
+        this.description = in.readString();
+        this.videoURL = in.readString();
+        this.thumbnailURL = in.readString();
+        this.recipeId = in.readInt();
+    }
+
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Step withId(Integer id) {
-        this.id = id;
-        return this;
     }
 
     public String getShortDescription() {
@@ -96,22 +81,12 @@ public class Step implements Parcelable
         this.shortDescription = shortDescription;
     }
 
-    public Step withShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
-        return this;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Step withDescription(String description) {
-        this.description = description;
-        return this;
     }
 
     public String getVideoURL() {
@@ -122,11 +97,6 @@ public class Step implements Parcelable
         this.videoURL = videoURL;
     }
 
-    public Step withVideoURL(String videoURL) {
-        this.videoURL = videoURL;
-        return this;
-    }
-
     public String getThumbnailURL() {
         return thumbnailURL;
     }
@@ -135,21 +105,36 @@ public class Step implements Parcelable
         this.thumbnailURL = thumbnailURL;
     }
 
-    public Step withThumbnailURL(String thumbnailURL) {
-        this.thumbnailURL = thumbnailURL;
-        return this;
+    public Integer getRecipeId() {
+        return recipeId;
+    }
+
+    public void setRecipeId(Integer recipeId) {
+        this.recipeId = recipeId;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(id);
-        dest.writeValue(shortDescription);
-        dest.writeValue(description);
-        dest.writeValue(videoURL);
-        dest.writeValue(thumbnailURL);
+        dest.writeInt(id);
+        dest.writeString(shortDescription);
+        dest.writeString(description);
+        dest.writeString(videoURL);
+        dest.writeString(thumbnailURL);
+        dest.writeInt(recipeId);
     }
 
     public int describeContents() {
         return  0;
     }
 
+    public final static Parcelable.Creator<Step> CREATOR = new Creator<Step>() {
+
+        public Step createFromParcel(Parcel in) {
+            return new Step(in);
+        }
+
+        public Step[] newArray(int size) {
+            return (new Step[size]);
+        }
+
+    };
 }

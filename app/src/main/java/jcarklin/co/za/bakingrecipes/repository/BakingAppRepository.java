@@ -18,7 +18,9 @@ public class BakingAppRepository {
     private static final String BASE_URL = "http://go.udacity.com/";
 
     private static BakingAppRepository repository;
+
     private BakingAppService bakingAppService;
+
     protected List<Recipe> recipesList;
 
     private BakingAppRepository() {

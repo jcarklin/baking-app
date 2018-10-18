@@ -1,49 +1,31 @@
 package jcarklin.co.za.bakingrecipes.repository.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 import com.squareup.moshi.Json;
 
 @Entity(tableName = "ingredients")
-public class Ingredient implements Parcelable
-{
+public class Ingredient implements Parcelable {
 
     @Json(name = "quantity")
     private Integer quantity;
+
     @Json(name = "measure")
     private String measure;
+
     @Json(name = "ingredient")
     private String ingredient;
-    public final static Parcelable.Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
 
+    @ColumnInfo(name = "recipe_id")
+    private Integer recipeId;
 
-        @SuppressWarnings({
-            "unchecked"
-        })
-        public Ingredient createFromParcel(Parcel in) {
-            return new Ingredient(in);
-        }
+    @ColumnInfo(name = "shopping_list")
+    private boolean inShoppingList;
 
-        public Ingredient[] newArray(int size) {
-            return (new Ingredient[size]);
-        }
-
-    }
-    ;
-
-    protected Ingredient(Parcel in) {
-        this.quantity = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.measure = ((String) in.readValue((String.class.getClassLoader())));
-        this.ingredient = ((String) in.readValue((String.class.getClassLoader())));
-    }
-
-    /**
-     * No args constructor for use in serialization
-     * 
-     */
     public Ingredient() {
+
     }
 
     /**
@@ -59,17 +41,20 @@ public class Ingredient implements Parcelable
         this.ingredient = ingredient;
     }
 
+    protected Ingredient(Parcel in) {
+        this.quantity = in.readInt();
+        this.measure = in.readString();
+        this.ingredient = in.readString();
+        this.recipeId = in.readInt();
+        this.inShoppingList = in.readInt() != 0;
+    }
+
     public Integer getQuantity() {
         return quantity;
     }
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public Ingredient withQuantity(Integer quantity) {
-        this.quantity = quantity;
-        return this;
     }
 
     public String getMeasure() {
@@ -80,11 +65,6 @@ public class Ingredient implements Parcelable
         this.measure = measure;
     }
 
-    public Ingredient withMeasure(String measure) {
-        this.measure = measure;
-        return this;
-    }
-
     public String getIngredient() {
         return ingredient;
     }
@@ -93,19 +73,46 @@ public class Ingredient implements Parcelable
         this.ingredient = ingredient;
     }
 
-    public Ingredient withIngredient(String ingredient) {
-        this.ingredient = ingredient;
-        return this;
+    public Integer getRecipeId() {
+        return recipeId;
     }
 
+    public void setRecipeId(Integer recipeId) {
+        this.recipeId = recipeId;
+    }
+
+    public boolean isInShoppingList() {
+        return inShoppingList;
+    }
+
+    public void setInShoppingList(boolean inShoppingList) {
+        this.inShoppingList = inShoppingList;
+    }
+
+    @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeValue(quantity);
-        dest.writeValue(measure);
-        dest.writeValue(ingredient);
+        dest.writeInt(quantity);
+        dest.writeString(measure);
+        dest.writeString(ingredient);
+        dest.writeInt(recipeId);
+        dest.writeInt((isInShoppingList() ? 1 : 0));
     }
 
+    @Override
     public int describeContents() {
         return  0;
     }
+
+    public final static Parcelable.Creator<Ingredient> CREATOR = new Creator<Ingredient>() {
+
+        public Ingredient createFromParcel(Parcel in) {
+            return new Ingredient(in);
+        }
+
+        public Ingredient[] newArray(int size) {
+            return (new Ingredient[size]);
+        }
+
+    };
 
 }
