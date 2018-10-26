@@ -2,17 +2,30 @@ package jcarklin.co.za.bakingrecipes.repository.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import android.support.annotation.NonNull;
+
 import com.squareup.moshi.Json;
 
-@Entity(tableName = "recipe_steps")
-public class Step implements Parcelable
-{
-    @PrimaryKey
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
+@Entity(tableName = "recipe_steps",
+        primaryKeys = {"id","recipe_id"},
+        indices = {@Index("recipe_id")},
+        foreignKeys = {@ForeignKey(entity = Recipe.class,
+                parentColumns = "id",
+                childColumns = "recipe_id",
+                onDelete = ForeignKey.CASCADE)})
+public class Step implements Parcelable {
+
     @Json(name = "id")
+    @NonNull
     private Integer id;
 
     @ColumnInfo(name = "short_description")
@@ -32,9 +45,10 @@ public class Step implements Parcelable
     private String thumbnailURL;
 
     @ColumnInfo(name = "recipe_id")
+    @NonNull
     private Integer recipeId;
 
-
+    @Ignore
     public Step() {
     }
 

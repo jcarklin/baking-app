@@ -2,15 +2,27 @@ package jcarklin.co.za.bakingrecipes.repository.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.squareup.moshi.Json;
 
+import static android.arch.persistence.room.ForeignKey.CASCADE;
+
 @Entity(tableName = "ingredients")
+@ForeignKey(entity = Recipe.class,
+        parentColumns = "id",
+        childColumns = "recipe_id")
 public class Ingredient implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    @Json(name = "id")
+    private Integer id;
+
     @Json(name = "quantity")
-    private Integer quantity;
+    private Double quantity;
 
     @Json(name = "measure")
     private String measure;
@@ -24,6 +36,7 @@ public class Ingredient implements Parcelable {
     @ColumnInfo(name = "shopping_list")
     private boolean inShoppingList;
 
+    @Ignore
     public Ingredient() {
 
     }
@@ -34,7 +47,7 @@ public class Ingredient implements Parcelable {
      * @param ingredient
      * @param quantity
      */
-    public Ingredient(Integer quantity, String measure, String ingredient) {
+    public Ingredient(Double quantity, String measure, String ingredient) {
         super();
         this.quantity = quantity;
         this.measure = measure;
@@ -42,18 +55,27 @@ public class Ingredient implements Parcelable {
     }
 
     protected Ingredient(Parcel in) {
-        this.quantity = in.readInt();
+        this.id = in.readInt();
+        this.quantity = in.readDouble();
         this.measure = in.readString();
         this.ingredient = in.readString();
         this.recipeId = in.readInt();
         this.inShoppingList = in.readInt() != 0;
     }
 
-    public Integer getQuantity() {
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 
@@ -91,7 +113,8 @@ public class Ingredient implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(quantity);
+        dest.writeInt(id);
+        dest.writeDouble(quantity);
         dest.writeString(measure);
         dest.writeString(ingredient);
         dest.writeInt(recipeId);

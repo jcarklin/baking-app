@@ -9,15 +9,8 @@ import com.squareup.moshi.Json;
 
 import java.util.List;
 
-public class RecipeComplete implements Parcelable
+public class RecipeComplete extends Recipe implements Parcelable
 {
-
-    @PrimaryKey
-    @Json(name = "id")
-    private Integer id;
-
-    @Json(name = "name")
-    private String name;
 
     @Relation(parentColumn = "id", entityColumn = "recipe_id")
     @Json(name = "ingredients")
@@ -26,12 +19,6 @@ public class RecipeComplete implements Parcelable
     @Relation(parentColumn = "id", entityColumn = "recipe_id")
     @Json(name = "steps")
     private List<Step> steps = null;
-
-    @Json(name = "servings")
-    private Integer servings;
-
-    @Json(name = "image")
-    private String image;
 
     public RecipeComplete() {
     }

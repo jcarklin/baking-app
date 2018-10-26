@@ -3,6 +3,7 @@ package jcarklin.co.za.bakingrecipes.repository.model;
 import java.util.List;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.Relation;
 import android.os.Parcel;
@@ -11,18 +12,18 @@ import android.os.Parcelable.Creator;
 import com.squareup.moshi.Json;
 
 @Entity(tableName = "recipes")
-public class Recipe implements Parcelable
-{
+public class Recipe implements Parcelable {
 
     @PrimaryKey
-    private Integer id;
+    protected Integer id;
 
-    private String name;
+    protected String name;
 
-    private Integer servings;
+    protected Integer servings;
 
-    private String image;
+    protected String image;
 
+    @Ignore
     public Recipe() {
     }
 

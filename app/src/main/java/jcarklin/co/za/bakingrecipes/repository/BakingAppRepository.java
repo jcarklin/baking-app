@@ -1,10 +1,19 @@
 package jcarklin.co.za.bakingrecipes.repository;
 
+import android.app.Application;
+import android.arch.lifecycle.LiveData;
+import android.util.Log;
+
+import java.io.IOException;
 import java.util.List;
 
-import jcarklin.co.za.bakingrecipes.repository.api.BakingAppService;
+import jcarklin.co.za.bakingrecipes.repository.api.BakingAppRetrofitService;
+import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDao;
+import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDatabase;
+import jcarklin.co.za.bakingrecipes.repository.model.Ingredient;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.Step;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -20,18 +29,20 @@ public class BakingAppRepository {
 
     private static BakingAppRepository repository;
 
-    private BakingAppService bakingAppService;
+    private BakingAppRetrofitService bakingAppRetrofitService;
+    private final BakingAppDao bakingAppDao;
 
-    protected List<RecipeComplete> recipesList;
+    protected LiveData<List<RecipeComplete>> recipesList;
 
-    private BakingAppRepository() {
+    private BakingAppRepository(Application application) {
+        bakingAppDao = BakingAppDatabase.getInstance(application).bakingAppDao();
         setupNetworkApi();
-        getRecipes();
+        recipesList = bakingAppDao.fetchAllRecipes();
     }
 
-    public static BakingAppRepository getInstance() {
+    public static BakingAppRepository getInstance(Application application) {
         if (repository == null) {
-            repository = new BakingAppRepository();
+            repository = new BakingAppRepository(application);
         }
         return repository;
     }
@@ -47,26 +58,34 @@ public class BakingAppRepository {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build();
-        bakingAppService = retrofit.create(BakingAppService.class);
+        bakingAppRetrofitService = retrofit.create(BakingAppRetrofitService.class);
     }
 
-    private void getRecipes() {
-        bakingAppService.getRecipes().enqueue(new Callback<List<RecipeComplete>>() {
-            @Override
-            public void onResponse(Call<List<RecipeComplete>> call, Response<List<RecipeComplete>> response) {
-                if(response.isSuccessful()) {
-                    recipesList = response.body();
-                } else {
-                    System.out.println(response.errorBody());
+    public void setupRecipes() {
+
+        Response<List<RecipeComplete>> recipeCompletesResponse = null;
+        try {
+            recipeCompletesResponse = bakingAppRetrofitService.getRecipes().execute();
+            if (recipeCompletesResponse.isSuccessful()) {
+                bakingAppDao.clearRecipesExceptShoppingList();
+                for (RecipeComplete recipeComplete : recipeCompletesResponse.body()) {
+                    for (Ingredient ingredient : recipeComplete.getIngredients()) {
+                        ingredient.setRecipeId(recipeComplete.getId());
+                    }
+                    for (Step step : recipeComplete.getSteps()) {
+                        step.setRecipeId(recipeComplete.getId());
+                    }
+                    bakingAppDao.insertRecipeStepsAndIngredients(recipeComplete);
                 }
+            } else {
+                Log.i(TAG,"Unsuccessful attempt to retrieve recipes");
             }
-
-            @Override
-            public void onFailure(Call<List<RecipeComplete>> call, Throwable t) {
-
-            }
-        });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-
+    public LiveData<List<RecipeComplete>> getRecipesList() {
+        return recipesList;
+    }
 }
