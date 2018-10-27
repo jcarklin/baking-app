@@ -25,7 +25,7 @@ public abstract class BakingAppDao {
     public abstract LiveData<List<RecipeComplete>> fetchAllRecipes();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract long addRecipe(Recipe recipe);
+    public abstract long addRecipes(Recipe... recipe);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     public abstract List<Long> addIngredients(List<Ingredient> ingredients);
@@ -46,7 +46,10 @@ public abstract class BakingAppDao {
     public abstract int updateShoppingList(Ingredient ingredient);
 
     @Transaction
-    public void insertRecipeStepsAndIngredients(RecipeComplete recipe) {
+    public void insertCompleteRecipes(RecipeComplete... recipe) {
+        clearIngredients();
+        clearRecipes();
+        for ()
         addRecipe(recipe);
         addIngredients(recipe.getIngredients());
         addSteps(recipe.getSteps());
@@ -54,7 +57,6 @@ public abstract class BakingAppDao {
 
     @Transaction
     public void clearRecipesExceptShoppingList() {
-        clearIngredients();
-        clearRecipes();
+
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,23 +17,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|center_horizontal|center"
-            android:layout_margin="@dimen/margin"
+            android:layout_margin="8dp"
             android:fadeScrollbars="true"
             android:scrollbars="vertical"
+
             tools:context=".MainActivity" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
         <ImageView
             android:id="@+id/error_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_error_outline_red_24dp"
             android:padding="8dp"
-            android:contentDescription="@string/error" />
+            android:contentDescription="@string/error"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/error_message"
             android:layout_width="wrap_content"
@@ -45,7 +49,7 @@
 
     </LinearLayout>
     <ProgressBar
-        android:id="@+id/pb_load_movies"
+        android:id="@+id/pb_loading"
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,3 +58,4 @@
     </ProgressBar>
 
 </FrameLayout>
+</layout>
