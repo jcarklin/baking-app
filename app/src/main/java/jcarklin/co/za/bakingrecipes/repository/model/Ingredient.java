@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,10 +12,12 @@ import com.squareup.moshi.Json;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
-@Entity(tableName = "ingredients")
-@ForeignKey(entity = Recipe.class,
-        parentColumns = "id",
-        childColumns = "recipe_id")
+@Entity(tableName = "ingredients",
+        indices = {@Index("recipe_id")},
+        foreignKeys = {@ForeignKey(entity = Recipe.class,
+            parentColumns = "id",
+            childColumns = "recipe_id",
+            onDelete = ForeignKey.CASCADE)})
 public class Ingredient implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
@@ -32,9 +35,6 @@ public class Ingredient implements Parcelable {
 
     @ColumnInfo(name = "recipe_id")
     private Integer recipeId;
-
-    @ColumnInfo(name = "shopping_list")
-    private boolean inShoppingList;
 
     @Ignore
     public Ingredient() {
@@ -60,7 +60,6 @@ public class Ingredient implements Parcelable {
         this.measure = in.readString();
         this.ingredient = in.readString();
         this.recipeId = in.readInt();
-        this.inShoppingList = in.readInt() != 0;
     }
 
     public Integer getId() {
@@ -103,14 +102,6 @@ public class Ingredient implements Parcelable {
         this.recipeId = recipeId;
     }
 
-    public boolean isInShoppingList() {
-        return inShoppingList;
-    }
-
-    public void setInShoppingList(boolean inShoppingList) {
-        this.inShoppingList = inShoppingList;
-    }
-
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
@@ -118,7 +109,6 @@ public class Ingredient implements Parcelable {
         dest.writeString(measure);
         dest.writeString(ingredient);
         dest.writeInt(recipeId);
-        dest.writeInt((isInShoppingList() ? 1 : 0));
     }
 
     @Override

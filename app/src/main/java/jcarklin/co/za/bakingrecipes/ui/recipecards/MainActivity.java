@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,8 +17,9 @@ import java.util.List;
 
 import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.databinding.ActivityMainBinding;
-import jcarklin.co.za.bakingrecipes.repository.BakingAppIntentService;
+import jcarklin.co.za.bakingrecipes.repository.model.RecipeCardsResponse;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.Resource;
 
 public class MainActivity extends AppCompatActivity implements RecipeCardsAdapter.RecipeCardsOnClickHandler {
 
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements RecipeCardsAdapte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         rvRecipes = binding.rvRecipes;
         recipeCardsAdapter = new RecipeCardsAdapter(this);
@@ -40,28 +41,33 @@ public class MainActivity extends AppCompatActivity implements RecipeCardsAdapte
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rvRecipes.setLayoutManager(layoutManager);
         rvRecipes.setHasFixedSize(true);
-        setupRecipes();
         setupViewModel();
-    }
-
-    public void setupRecipes() {
-        Intent serviceIt = new Intent(this, BakingAppIntentService.class);
-        serviceIt.setAction(BakingAppIntentService.ACTION_SETUP_RECIPES);
-        startService(serviceIt);
     }
 
     private void setupViewModel() {
         recipeCardsViewModel = ViewModelProviders.of(this).get(RecipeCardsViewModel.class);
-        recipeCardsViewModel.getRecipes().observe(this, new Observer<List<RecipeComplete>>() {
+        recipeCardsViewModel.getRecipes().observe(this, new Observer<Resource<RecipeCardsResponse>>() {
             @Override
-            public void onChanged(@Nullable List<RecipeComplete> recipes) {
-                displayRecipeCards(recipes);
+            public void onChanged(@Nullable Resource<RecipeCardsResponse> recipesResponse) {
+                switch (recipesResponse.getStatus()){
+                    case LOADING: //loading
+                        break;
+                    case ERROR:
+                        Log.e("Error", recipesResponse.getException().getMessage(),
+                                recipesResponse.getException());
+                        Toast.makeText(MainActivity.this, R.string.error, Toast.LENGTH_LONG).show();
+                        break;
+                    case SUCCESS:
+                        RecipeCardsResponse data = recipesResponse.getData();
+                        recipeCardsAdapter.setRecipes(data.getList());
+                        break;
+                }
             }
         });
     }
 
     private void displayRecipeCards(List<RecipeComplete> recipes) {
-        recipeCardsAdapter.setRecipes(recipes);
+
     }
 
     @Override
