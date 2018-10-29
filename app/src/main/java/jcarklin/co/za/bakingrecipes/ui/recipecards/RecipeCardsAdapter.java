@@ -1,20 +1,16 @@
 package jcarklin.co.za.bakingrecipes.ui.recipecards;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.databinding.RecipeCardBinding;
-import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 
 public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.RecipeCardViewHolder> {
@@ -52,14 +48,15 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
 
     @Override
     public int getItemCount() {
-        return 0;
+        return recipeList.size();
     }
 
 
     //ViewHolder Class
     public class RecipeCardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        RecipeCardBinding binding;
+        private final RecipeCardBinding binding;
+
         RecipeCardViewHolder(RecipeCardBinding recipeCardBinding) {
             super(recipeCardBinding.getRoot());
             this.binding = recipeCardBinding;

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">BakingRecipes</string>
     <string name="error">An error has occurred while fetching recipes.</string>
+    <string name="network_unavailable">Cannot refresh data. Network is currently unavailable.</string>
 </resources>

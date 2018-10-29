@@ -2,9 +2,10 @@ package jcarklin.co.za.bakingrecipes.repository;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
+import android.arch.lifecycle.MutableLiveData;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import java.io.IOException;
@@ -12,16 +13,14 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.api.BakingAppApi;
 import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDao;
 import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDatabase;
-import jcarklin.co.za.bakingrecipes.repository.model.RecipeCardsResponse;
+import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
-import jcarklin.co.za.bakingrecipes.repository.model.Resource;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
@@ -36,11 +35,19 @@ public class BakingAppRepository {
     private BakingAppApi bakingAppApi;
     private final BakingAppDao bakingAppDao;
     private final Executor executor;
+    private boolean refresh = true;
+
+    private final LiveData<List<RecipeComplete>> recipes;
+    private final MutableLiveData<FetchStatus> status = new MutableLiveData<>();
+
+    private final ConnectivityManager connectivityManager;
 
     private BakingAppRepository(Application application) {
         bakingAppDao = BakingAppDatabase.getInstance(application).bakingAppDao();
-        executor = Executors.newSingleThreadExecutor();
+        recipes = bakingAppDao.fetchAllRecipes();
         setupNetworkApi();
+        executor = Executors.newSingleThreadExecutor();
+        connectivityManager = (ConnectivityManager)application.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
     public static BakingAppRepository getInstance(Application application) {
@@ -64,42 +71,13 @@ public class BakingAppRepository {
         bakingAppApi = retrofit.create(BakingAppApi.class);
     }
 
-    public LiveData<Resource<RecipeCardsResponse>> fetchRecipes() {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                refresh();
-            }
-        });
-
-        final LiveData<List<RecipeComplete>> source = bakingAppDao.fetchAllRecipes();
-
-        /**
-         * From https://proandroiddev.com/build-an-app-with-offline-support-1a32c6bab7d2:
-         * We will create a mediator to observe the changes. Room will automatically notify
-         * all active observers when the data changes.
-         * Because it is using LiveData,
-         * this will be efficient because it will update the data only if there is at least one active observer.
-         *
-         */
-        final MediatorLiveData mediator = new MediatorLiveData();
-        mediator.addSource(source, new Observer<List<RecipeComplete>>() {
-            @Override
-            public void onChanged(@Nullable List<RecipeComplete> recipes) {
-                Log.d("DATA", "Observed recipes list");
-                RecipeCardsResponse resp = new RecipeCardsResponse(recipes);
-                Resource<RecipeCardsResponse> success = Resource.<RecipeCardsResponse>success(resp);
-                mediator.setValue(success);
-            }
-        });
-
-        return mediator;
-    }
-
     private void refresh() {
+        if (refresh) {
+            bakingAppDao.clearRecipes();
+        }
 
         if (bakingAppDao.getNumberOfRecipes()>0) {
-            Log.d("DATA", "From cache");
+            Log.d(TAG, "Using database");
             return;
         }
 
@@ -110,26 +88,43 @@ public class BakingAppRepository {
             if (recipeCompleteList != null) {
                 long[] insertedIds = bakingAppDao.insertCompleteRecipes(recipeCompleteList);
                 if (insertedIds == null || insertedIds.length != recipeCompleteList.size()) {
-                    Log.e("DATA", "Unable to insert");
+                    Log.e(TAG, "Unable to insert");
                 } else {
-                    Log.d("DATA", "Data inserted");
+                    Log.d(TAG, "Data inserted");
+                    refresh = false;
                 }
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public void clearRecipes() {
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                bakingAppDao.clearRecipes();
-            }
-        });
+    private boolean checkNetworkAvailability() {
+        //Check if network is available
+        NetworkInfo networkInfo = connectivityManager==null ? null : connectivityManager.getActiveNetworkInfo();
+        boolean available = true;
+        if (networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
+            status.setValue(new FetchStatus(FetchStatus.Status.ERROR,R.string.network_unavailable));
+            available = false;
+        }
+        return available;
     }
 
+    public LiveData<FetchStatus> getStatus() {
+        return status;
+    }
 
+    public LiveData<List<RecipeComplete>> getRecipes() {
+        status.postValue(new FetchStatus(FetchStatus.Status.LOADING,null));
+        if (checkNetworkAvailability()) {
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    refresh();
+                }
+            });
+        }
+        return recipes;
+    }
 }

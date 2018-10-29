@@ -5,26 +5,26 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 import jcarklin.co.za.bakingrecipes.repository.BakingAppRepository;
-import jcarklin.co.za.bakingrecipes.repository.model.RecipeCardsResponse;
-import jcarklin.co.za.bakingrecipes.repository.model.Resource;
+import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
+import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 
 public class RecipeCardsViewModel extends AndroidViewModel {
 
     private final BakingAppRepository bakingAppRepository;
-    private final LiveData<Resource<RecipeCardsResponse>> recipes;
 
     public RecipeCardsViewModel(@NonNull Application application) {
         super(application);
         bakingAppRepository = BakingAppRepository.getInstance(application);
-        recipes = bakingAppRepository.fetchRecipes();
     }
 
-    public LiveData<Resource<RecipeCardsResponse>> getRecipes() {
-        return recipes;
+    public LiveData<List<RecipeComplete>> getRecipes() {
+        return bakingAppRepository.getRecipes();
     }
 
-    public void clearRecipes() {
-        bakingAppRepository.clearRecipes();
+    public LiveData<FetchStatus> getStatus() {
+        return bakingAppRepository.getStatus();
     }
 }

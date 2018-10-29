@@ -50,13 +50,12 @@
 
     </LinearLayout>
     <ProgressBar
-        android:id="@+id/pb_loading"
+        android:id="@+id/loading"
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:visibility="gone">
-    </ProgressBar>
+        >    </ProgressBar>
 
 </FrameLayout>
 </layout>
