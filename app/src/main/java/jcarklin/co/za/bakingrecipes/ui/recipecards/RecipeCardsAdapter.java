@@ -6,11 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jcarklin.co.za.bakingrecipes.databinding.RecipeCardBinding;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 
 public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.RecipeCardViewHolder> {
@@ -36,8 +39,8 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
     public RecipeCardViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         Context context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        RecipeCardBinding binding = RecipeCardBinding.inflate(inflater, viewGroup, false);
-        return new RecipeCardViewHolder(binding);
+        View view = inflater.inflate(R.layout.recipe_card, viewGroup, false);
+        return new RecipeCardViewHolder(view);
     }
 
     @Override
@@ -55,17 +58,17 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
     //ViewHolder Class
     public class RecipeCardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final RecipeCardBinding binding;
+        @BindView(R.id.tv_recipe_name)
+        TextView recipeName;
 
-        RecipeCardViewHolder(RecipeCardBinding recipeCardBinding) {
-            super(recipeCardBinding.getRoot());
-            this.binding = recipeCardBinding;
+        RecipeCardViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
             itemView.setOnClickListener(this);
         }
 
         public void bind(RecipeComplete recipeComplete) {
-            binding.setRecipe(recipeComplete);
-            binding.executePendingBindings();
+            recipeName.setText(recipeComplete.getName());
         }
 
         @Override

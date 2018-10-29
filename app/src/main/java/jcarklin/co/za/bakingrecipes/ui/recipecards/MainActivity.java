@@ -3,7 +3,6 @@ package jcarklin.co.za.bakingrecipes.ui.recipecards;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,29 +17,35 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
-import jcarklin.co.za.bakingrecipes.databinding.ActivityMainBinding;
 import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 
 public class MainActivity extends AppCompatActivity implements RecipeCardsAdapter.RecipeCardsOnClickHandler {
 
     private RecipeCardsAdapter recipeCardsAdapter = null;
-    RecyclerView rvRecipes;
-    private ActivityMainBinding binding;
     private RecipeCardsViewModel recipeCardsViewModel;
+
+    @BindView(R.id.rv_recipes)
+    RecyclerView rvRecipes;
+
+    @BindView(R.id.loading)
     ProgressBar loading;
+
+    @BindView(R.id.error_message)
     TextView errorMessage;
+
+    @BindView(R.id.error_icon)
     ImageView errorIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        rvRecipes = binding.rvRecipes;
-        loading = binding.loading;
-        errorMessage = binding.errorMessage;
-        errorIcon = binding.errorIcon;
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+
         recipeCardsAdapter = new RecipeCardsAdapter(this);
         rvRecipes.setAdapter(recipeCardsAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -74,8 +79,7 @@ public class MainActivity extends AppCompatActivity implements RecipeCardsAdapte
 
     @Override
     public void onClick(RecipeComplete selectedRecipe) {
-        Toast toast = Toast.makeText(this, "You clicked " + selectedRecipe.getName(), Toast.LENGTH_SHORT);
-        toast.show();
+
     }
 
     private void showRecipes() {
