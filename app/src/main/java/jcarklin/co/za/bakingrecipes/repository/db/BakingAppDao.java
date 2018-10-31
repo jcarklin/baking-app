@@ -35,7 +35,7 @@ public abstract class BakingAppDao {
     public abstract List<Long> addSteps(List<Step> steps);
 
     @Query("DELETE FROM recipes")
-    public abstract void clearRecipes();
+    protected abstract int clearRecipes();
 
     //@Query("SELECT * FROM ingredients WHERE shopping_list = 1")
     //public abstract List<Ingredient> getShoppingList();
@@ -44,20 +44,22 @@ public abstract class BakingAppDao {
     public abstract int updateShoppingList(Ingredient ingredient);
 
     @Transaction
-    public long[] insertCompleteRecipes(List<RecipeComplete> recipes) {
+    public long[] clearAndinsertCompleteRecipes(List<RecipeComplete> recipes) {
         long[] ids = new long[recipes.size()];
-        RecipeComplete recipeComplete;
-        for (int i=0; i<recipes.size(); i++) {
-            recipeComplete = recipes.get(i);
-            for (Ingredient ingredient : recipeComplete.getIngredients()) {
-                ingredient.setRecipeId(recipeComplete.getId());
+        if (clearRecipes()>0) {
+            RecipeComplete recipeComplete;
+            for (int i = 0; i < recipes.size(); i++) {
+                recipeComplete = recipes.get(i);
+                for (Ingredient ingredient : recipeComplete.getIngredients()) {
+                    ingredient.setRecipeId(recipeComplete.getId());
+                }
+                for (Step step : recipeComplete.getSteps()) {
+                    step.setRecipeId(recipeComplete.getId());
+                }
+                ids[i] = addRecipe(recipeComplete);
+                addIngredients(recipeComplete.getIngredients());
+                addSteps(recipeComplete.getSteps());
             }
-            for (Step step : recipeComplete.getSteps()) {
-                step.setRecipeId(recipeComplete.getId());
-            }
-            ids[i] = addRecipe(recipeComplete);
-            addIngredients(recipeComplete.getIngredients());
-            addSteps(recipeComplete.getSteps());
         }
         return ids;
     }
