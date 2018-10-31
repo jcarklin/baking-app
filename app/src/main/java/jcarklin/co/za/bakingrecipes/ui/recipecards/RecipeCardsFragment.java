@@ -66,7 +66,7 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
         if (getString(R.string.screen_type).equals("phone")) {
             layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         } else {
-            layoutManager = new GridLayoutManager(getContext(), 4);
+            layoutManager = new GridLayoutManager(getContext(), 4, GridLayoutManager.VERTICAL, false);
         }
         rvRecipes.setLayoutManager(layoutManager);
         rvRecipes.setHasFixedSize(true);
@@ -115,7 +115,11 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
 
     @Override
     public void onClick(RecipeComplete selectedRecipe) {
-        Toast.makeText(getContext(),"You clicked " + selectedRecipe.getName(),Toast.LENGTH_LONG).show();
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(getContext(),"You clicked " + selectedRecipe.getName(),Toast.LENGTH_LONG);
+        toast.show();
     }
 
     private void showRecipes() {
@@ -139,9 +143,11 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
 //        errorIcon.setImageResource(R.drawable.ic_error_outline_red_24dp);
 //        errorIcon.setVisibility(View.VISIBLE);
     }
-
+    Toast toast;
     private void showError(String msg) {
-        Toast toast = Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT);
+        if (toast != null)
+            toast.cancel();
+        toast = Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT);
         toast.show();
     }
 }
