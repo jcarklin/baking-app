@@ -25,13 +25,13 @@ import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 
 public class MainActivity extends AppCompatActivity  {
 
-
+    private RecipeCardsViewModel recipeCardsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        recipeCardsViewModel = ViewModelProviders.of(this).get(RecipeCardsViewModel.class);
     }
 
 }

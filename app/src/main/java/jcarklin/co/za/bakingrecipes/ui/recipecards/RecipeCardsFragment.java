@@ -1,10 +1,12 @@
 package jcarklin.co.za.bakingrecipes.ui.recipecards;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,7 +31,6 @@ import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.RecipeCardsOnClickHandler {
 
     private RecipeCardsAdapter recipeCardsAdapter = null;
-    private RecipeCardsViewModel recipeCardsViewModel;
 
     @BindView(R.id.rv_recipes)
     RecyclerView rvRecipes;
@@ -50,7 +51,6 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupViewModel();
     }
 
     @Override
@@ -59,7 +59,12 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
 
         View view = inflater.inflate(R.layout.fragment_recipe_cards, container, false);
         ButterKnife.bind(this, view);
+        return view;
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         recipeCardsAdapter = new RecipeCardsAdapter(this);
         rvRecipes.setAdapter(recipeCardsAdapter);
         RecyclerView.LayoutManager layoutManager;
@@ -70,12 +75,16 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
         }
         rvRecipes.setLayoutManager(layoutManager);
         rvRecipes.setHasFixedSize(true);
+    }
 
-        return view;
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setupViewModel();
     }
 
     private void setupViewModel() {
-        recipeCardsViewModel = ViewModelProviders.of(getActivity()).get(RecipeCardsViewModel.class);
+        RecipeCardsViewModel recipeCardsViewModel = ViewModelProviders.of(getActivity()).get(RecipeCardsViewModel.class);
         recipeCardsViewModel.getRecipes().observe(this, new Observer<List<RecipeComplete>>() {
             @Override
             public void onChanged(@Nullable List<RecipeComplete> recipesResponse) {
