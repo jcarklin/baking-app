@@ -71,7 +71,7 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
         if (getString(R.string.screen_type).equals("phone")) {
             layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         } else {
-            layoutManager = new GridLayoutManager(getContext(), 4, GridLayoutManager.VERTICAL, false);
+            layoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
         }
         rvRecipes.setLayoutManager(layoutManager);
         rvRecipes.setHasFixedSize(true);

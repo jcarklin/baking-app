@@ -6,7 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +64,19 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
         @BindView(R.id.tv_recipe_name)
         TextView recipeName;
 
+        @BindView(R.id.iv_recipe_thumbnail)
+        ImageView recipeThumbnail;
+
+        @BindView(R.id.tv_number_servings)
+        TextView numServings;
+
+        @BindView(R.id.tv_number_ingredients)
+        TextView numIngredients;
+
+        @BindView(R.id.tv_number_steps)
+        TextView numSteps;
+
+
         RecipeCardViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
@@ -69,6 +85,16 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
 
         public void bind(RecipeComplete recipeComplete) {
             recipeName.setText(recipeComplete.getName());
+            if (!recipeComplete.getImage().isEmpty()) {
+                Picasso.get()
+                        .load(recipeComplete.getImage())
+                        .placeholder(R.drawable.ic_cake_black_48dp)
+                        .error(R.drawable.ic_cake_black_48dp)
+                        .into(recipeThumbnail);
+            }
+            numServings.setText("Number of Servings: " + recipeComplete.getServings());
+            numIngredients.setText("Number of Ingredients: " + recipeComplete.getIngredients().size());
+            numSteps.setText("Number of Steps: " + recipeComplete.getSteps().size());
         }
 
         @Override

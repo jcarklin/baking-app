@@ -15,15 +15,22 @@ public class RecipeCardsViewModel extends AndroidViewModel {
 
     private final BakingAppRepository bakingAppRepository;
 
+    private final LiveData<List<RecipeComplete>> recipes;
+
     public RecipeCardsViewModel(@NonNull Application application) {
         super(application);
         bakingAppRepository = BakingAppRepository.getInstance(application);
+        recipes = bakingAppRepository.getRecipes();
     }
 
     public LiveData<List<RecipeComplete>> getRecipes() {
-        return bakingAppRepository.getRecipes();
+        return recipes;
     }
 
+//    public LiveData<List<RecipeComplete>> refreshRecipes() {
+//        return
+//    }
+//
     public LiveData<FetchStatus> getStatus() {
         return bakingAppRepository.getStatus();
     }

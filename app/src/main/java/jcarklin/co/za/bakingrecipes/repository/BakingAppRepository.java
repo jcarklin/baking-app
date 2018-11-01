@@ -35,7 +35,6 @@ public class BakingAppRepository {
     private BakingAppApi bakingAppApi;
     private final BakingAppDao bakingAppDao;
     private final Executor executor;
-    private boolean refresh = true;
 
     private final LiveData<List<RecipeComplete>> recipes;
     private final MutableLiveData<FetchStatus> status = new MutableLiveData<>();
@@ -71,9 +70,12 @@ public class BakingAppRepository {
         bakingAppApi = retrofit.create(BakingAppApi.class);
     }
 
-    private void refresh() {
+    private void refresh(boolean refresh) {
         status.postValue(new FetchStatus(FetchStatus.Status.LOADING,null));
-        if (bakingAppDao.getNumberOfRecipes() > 0 && !refresh) {
+        if (refresh) {
+            bakingAppDao.clearRecipes();
+        }
+        if (bakingAppDao.getNumberOfRecipes() > 0) {
             Log.d(TAG, "Using database");
             status.postValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
         } else {
@@ -82,14 +84,13 @@ public class BakingAppRepository {
 
                 List<RecipeComplete> recipeCompleteList = response.body();
                 if (recipeCompleteList != null) {
-                    long[] insertedIds = bakingAppDao.clearAndinsertCompleteRecipes(recipeCompleteList);
+                    long[] insertedIds = bakingAppDao.insertCompleteRecipes(recipeCompleteList);
                     if (insertedIds == null || insertedIds.length != recipeCompleteList.size()) {
                         Log.e(TAG, "Unable to insert");
                         status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error));
                     } else {
                         Log.d(TAG, "Data inserted");
                         status.postValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
-                        refresh = false;
                     }
                 }
             } catch (IOException e) {
@@ -120,10 +121,21 @@ public class BakingAppRepository {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    refresh();
+                    refresh(false);
                 }
             });
         }
         return recipes;
+    }
+
+    public void refreshRecipes() {
+        if (checkNetworkAvailability()) {
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    refresh(true);
+                }
+            });
+        }
     }
 }
