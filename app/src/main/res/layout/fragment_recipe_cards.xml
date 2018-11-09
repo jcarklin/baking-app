@@ -25,14 +25,14 @@
         android:layout_gravity="center_horizontal|center_vertical"
         android:orientation="horizontal"
         android:visibility="gone">
-        <!--<ImageView-->
-            <!--android:id="@+id/error_icon"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_error_outline_red_24dp"-->
-            <!--android:padding="8dp"-->
-            <!--android:contentDescription="@string/error"-->
-            <!--android:visibility="gone"/>-->
+        <ImageView
+            android:id="@+id/error_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_error_outline_red_24dp"
+            android:padding="8dp"
+            android:contentDescription="@string/error"
+            android:visibility="gone"/>
         <TextView
             android:id="@+id/error_message"
             android:layout_width="wrap_content"

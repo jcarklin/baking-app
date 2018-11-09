@@ -17,22 +17,23 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
-import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 
 public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.RecipeCardViewHolder> {
 
-    private List<RecipeComplete> recipeList = new ArrayList<>();
+    private List<Recipe> recipeList = new ArrayList<>();
     private final RecipeCardsOnClickHandler recipeCardsOnClickHandler;
+    private Context context;
 
     public interface RecipeCardsOnClickHandler {
-        void onClick(RecipeComplete selectedRecipe);
+        void onClick(Recipe selectedRecipe);
     }
 
     public RecipeCardsAdapter(RecipeCardsOnClickHandler recipeCardsOnClickHandler) {
         this.recipeCardsOnClickHandler = recipeCardsOnClickHandler;
     }
 
-    public void setRecipes(List<RecipeComplete> recipes) {
+    public void setRecipes(List<Recipe> recipes) {
         this.recipeList = recipes;
         notifyDataSetChanged();
     }
@@ -40,7 +41,7 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
     @NonNull
     @Override
     public RecipeCardViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        Context context = viewGroup.getContext();
+        context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.recipe_card, viewGroup, false);
         return new RecipeCardViewHolder(view);
@@ -48,8 +49,8 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull RecipeCardViewHolder viewHolder, int i) {
-        RecipeComplete recipeComplete = recipeList.get(i);
-        viewHolder.bind(recipeComplete);
+        Recipe recipe = recipeList.get(i);
+        viewHolder.bind(recipe);
     }
 
     @Override
@@ -70,11 +71,11 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
         @BindView(R.id.tv_number_servings)
         TextView numServings;
 
-        @BindView(R.id.tv_number_ingredients)
-        TextView numIngredients;
-
-        @BindView(R.id.tv_number_steps)
-        TextView numSteps;
+//        @BindView(R.id.tv_number_ingredients)
+//        TextView numIngredients;
+//
+//        @BindView(R.id.tv_number_steps)
+//        TextView numSteps;
 
 
         RecipeCardViewHolder(View itemView) {
@@ -83,24 +84,24 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
             itemView.setOnClickListener(this);
         }
 
-        public void bind(RecipeComplete recipeComplete) {
-            recipeName.setText(recipeComplete.getName());
-            if (!recipeComplete.getImage().isEmpty()) {
+        public void bind(Recipe recipe) {
+            recipeName.setText(recipe.getName());
+            if (!recipe.getImage().isEmpty()) {
                 Picasso.get()
-                        .load(recipeComplete.getImage())
+                        .load(recipe.getImage())
                         .placeholder(R.drawable.ic_cake_black_48dp)
                         .error(R.drawable.ic_cake_black_48dp)
                         .into(recipeThumbnail);
             }
-            numServings.setText("Number of Servings: " + recipeComplete.getServings());
-            numIngredients.setText("Number of Ingredients: " + recipeComplete.getIngredients().size());
-            numSteps.setText("Number of Steps: " + recipeComplete.getSteps().size());
+            numServings.setText(context.getString(R.string.number_of_servings) + recipe.getServings());
+//            numIngredients.setText("Number of Ingredients: " + recipe.getIngredients().size());
+//            numSteps.setText("Number of Steps: " + recipe.getSteps().size());
         }
 
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            RecipeComplete selectedRecipe = recipeList.get(adapterPosition);
+            Recipe selectedRecipe = recipeList.get(adapterPosition);
             recipeCardsOnClickHandler.onClick(selectedRecipe);
         }
     }

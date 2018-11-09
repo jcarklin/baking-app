@@ -18,9 +18,17 @@ import jcarklin.co.za.bakingrecipes.repository.model.Step;
 @Dao
 public abstract class BakingAppDao {
 
+//
+//    @Transaction
+//    public abstract LiveData<List<RecipeComplete>> fetchAllRecipes();
+
     @Query("SELECT * FROM recipes")
+    public abstract LiveData<List<Recipe>> getRecipesList();
+
     @Transaction
-    public abstract LiveData<List<RecipeComplete>> fetchAllRecipes();
+    @Query("SELECT * FROM recipes where id = :recipeId")
+    public abstract RecipeComplete getRecipe(Integer recipeId);
+
 
     @Query("SELECT COUNT(id) FROM recipes")
     public abstract int getNumberOfRecipes();

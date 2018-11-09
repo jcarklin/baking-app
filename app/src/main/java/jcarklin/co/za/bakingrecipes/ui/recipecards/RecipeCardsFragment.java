@@ -1,10 +1,9 @@
 package jcarklin.co.za.bakingrecipes.ui.recipecards;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,11 +25,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
-import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
+import jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsActivity;
 
 public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.RecipeCardsOnClickHandler {
 
     private RecipeCardsAdapter recipeCardsAdapter = null;
+
 
     @BindView(R.id.rv_recipes)
     RecyclerView rvRecipes;
@@ -41,8 +42,9 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
     @BindView(R.id.error_message)
     TextView errorMessage;
 
-//    @BindView(R.id.error_icon)
-//    ImageView errorIcon;
+    @BindView(R.id.error_icon)
+    ImageView errorIcon;
+    private RecipeCardsViewModel recipeCardsViewModel;
 
     public RecipeCardsFragment() {
 
@@ -84,10 +86,10 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
     }
 
     private void setupViewModel() {
-        RecipeCardsViewModel recipeCardsViewModel = ViewModelProviders.of(getActivity()).get(RecipeCardsViewModel.class);
-        recipeCardsViewModel.getRecipes().observe(this, new Observer<List<RecipeComplete>>() {
+        recipeCardsViewModel = ViewModelProviders.of(getActivity()).get(RecipeCardsViewModel.class);
+        recipeCardsViewModel.getRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
-            public void onChanged(@Nullable List<RecipeComplete> recipesResponse) {
+            public void onChanged(@Nullable List<Recipe> recipesResponse) {
                 recipeCardsAdapter.setRecipes(recipesResponse);
             }
         });
@@ -123,12 +125,10 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
     }
 
     @Override
-    public void onClick(RecipeComplete selectedRecipe) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(getContext(),"You clicked " + selectedRecipe.getName(),Toast.LENGTH_LONG);
-        toast.show();
+    public void onClick(Recipe selectedRecipe) {
+        Intent selectRecipeIntent = new Intent(getContext(),RecipeDetailsActivity.class);
+        recipeCardsViewModel.setSelectedRecipe(selectedRecipe.getId());
+        startActivity(selectRecipeIntent);
     }
 
     private void showRecipes() {

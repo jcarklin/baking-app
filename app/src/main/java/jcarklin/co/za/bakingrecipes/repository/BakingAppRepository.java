@@ -18,6 +18,7 @@ import jcarklin.co.za.bakingrecipes.repository.api.BakingAppApi;
 import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDao;
 import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDatabase;
 import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
+import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -35,15 +36,19 @@ public class BakingAppRepository {
     private BakingAppApi bakingAppApi;
     private final BakingAppDao bakingAppDao;
     private final Executor executor;
+    private boolean refresh = true;
 
-    private final LiveData<List<RecipeComplete>> recipes;
     private final MutableLiveData<FetchStatus> status = new MutableLiveData<>();
+
+    private final LiveData<List<Recipe>> recipes;
+    private final MutableLiveData<RecipeComplete> selectedRecipe = new MutableLiveData<>();
 
     private final ConnectivityManager connectivityManager;
 
     private BakingAppRepository(Application application) {
+        refresh = true;
         bakingAppDao = BakingAppDatabase.getInstance(application).bakingAppDao();
-        recipes = bakingAppDao.fetchAllRecipes();
+        recipes = bakingAppDao.getRecipesList();
         setupNetworkApi();
         executor = Executors.newSingleThreadExecutor();
         connectivityManager = (ConnectivityManager)application.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -68,9 +73,10 @@ public class BakingAppRepository {
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build();
         bakingAppApi = retrofit.create(BakingAppApi.class);
+        refreshRecipes();
     }
 
-    private void refresh(boolean refresh) {
+    private void refresh() {
         status.postValue(new FetchStatus(FetchStatus.Status.LOADING,null));
         if (refresh) {
             bakingAppDao.clearRecipes();
@@ -98,7 +104,7 @@ public class BakingAppRepository {
                 status.postValue(new FetchStatus(FetchStatus.Status.CRITICAL_ERROR,R.string.error));
             }
         }
-
+        refresh = false;
     }
 
     private boolean checkNetworkAvailability() {
@@ -116,12 +122,12 @@ public class BakingAppRepository {
         return status;
     }
 
-    public LiveData<List<RecipeComplete>> getRecipes() {
+    public LiveData<List<Recipe>> getRecipes() {
         if (checkNetworkAvailability()) {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    refresh(false);
+                    refresh();
                 }
             });
         }
@@ -129,13 +135,26 @@ public class BakingAppRepository {
     }
 
     public void refreshRecipes() {
+        refresh = true;
+        getRecipes();
+    }
+
+    public void setSelectedRecipe(final Integer recipeId) {
         if (checkNetworkAvailability()) {
             executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    refresh(true);
+                    RecipeComplete recipeComplete = bakingAppDao.getRecipe(recipeId);
+                    if (recipeComplete != null) {
+                        selectedRecipe.postValue(recipeComplete);
+                    }
                 }
             });
         }
+
+    }
+
+    public LiveData<RecipeComplete> getSelectedRecipe() {
+        return selectedRecipe;
     }
 }

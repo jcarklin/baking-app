@@ -13,14 +13,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.recipecards.MainActivity">
+        <activity android:name=".ui.recipecards.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <service android:name=".repository.BakingAppIntentService" android:exported="false"/>
+        <activity android:name=".ui.recipedetails.RecipeDetailsActivity"
+            android:parentActivityName=".ui.recipecards.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.recipecards.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

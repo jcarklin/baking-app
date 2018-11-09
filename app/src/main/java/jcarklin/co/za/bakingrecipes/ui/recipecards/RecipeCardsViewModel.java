@@ -9,13 +9,13 @@ import java.util.List;
 
 import jcarklin.co.za.bakingrecipes.repository.BakingAppRepository;
 import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
-import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 
 public class RecipeCardsViewModel extends AndroidViewModel {
 
     private final BakingAppRepository bakingAppRepository;
 
-    private final LiveData<List<RecipeComplete>> recipes;
+    private final LiveData<List<Recipe>> recipes;
 
     public RecipeCardsViewModel(@NonNull Application application) {
         super(application);
@@ -23,15 +23,19 @@ public class RecipeCardsViewModel extends AndroidViewModel {
         recipes = bakingAppRepository.getRecipes();
     }
 
-    public LiveData<List<RecipeComplete>> getRecipes() {
+    public LiveData<List<Recipe>> getRecipes() {
         return recipes;
     }
 
-//    public LiveData<List<RecipeComplete>> refreshRecipes() {
+//    public LiveData<List<Recipe>> refreshRecipes() {
 //        return
 //    }
 //
     public LiveData<FetchStatus> getStatus() {
         return bakingAppRepository.getStatus();
+    }
+
+    public void setSelectedRecipe(Integer id) {
+        bakingAppRepository.setSelectedRecipe(id);
     }
 }

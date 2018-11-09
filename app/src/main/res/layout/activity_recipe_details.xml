@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <fragment
+            android:id="@+id/recipe_heading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsHeadingFragment"/>
+
+        <fragment
+            android:id="@+id/recipe_ingredients"
+            android:name="jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsIngredientsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <fragment
+            android:id="@+id/recipe_steps"
+            android:name="jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsStepsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"/>
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
+
+
