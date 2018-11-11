@@ -110,18 +110,11 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-//        mListener = null;
     }
 
     @Override
@@ -135,22 +128,22 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
         rvRecipes.setVisibility(View.VISIBLE);
         loading.setVisibility(View.GONE);
         errorMessage.setVisibility(View.GONE);
- //       errorIcon.setVisibility(View.GONE);
+        errorIcon.setVisibility(View.GONE);
     }
 
     private void showProgressBar() {
         rvRecipes.setVisibility(View.INVISIBLE);
         loading.setVisibility(View.VISIBLE);
         errorMessage.setVisibility(View.GONE);
-//        errorIcon.setVisibility(View.GONE);
+        errorIcon.setVisibility(View.GONE);
     }
 
     private void showError() {
         rvRecipes.setVisibility(View.INVISIBLE);
         loading.setVisibility(View.GONE);
         errorMessage.setVisibility(View.VISIBLE);
-//        errorIcon.setImageResource(R.drawable.ic_error_outline_red_24dp);
-//        errorIcon.setVisibility(View.VISIBLE);
+        errorIcon.setImageResource(R.drawable.ic_error_outline_red_24dp);
+        errorIcon.setVisibility(View.VISIBLE);
     }
     Toast toast;
     private void showError(String msg) {

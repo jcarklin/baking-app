@@ -2,10 +2,15 @@ package jcarklin.co.za.bakingrecipes.ui.recipedetails;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.BulletSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +28,8 @@ import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 public class RecipeDetailsIngredientsFragment extends Fragment {
 
     private RecipeDetailsViewModel recipeDetailsViewModel;
+    private String ingredients = "";
+    private Integer recipeid;
 
     @BindView(R.id.tv_ingredients_list)
     TextView ingredientsList;
@@ -48,6 +55,7 @@ public class RecipeDetailsIngredientsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ingredients = "";
         recipeDetailsViewModel = ViewModelProviders.of(getActivity()).get(RecipeDetailsViewModel.class);
         recipeDetailsViewModel.getSelectedRecipe().observe(this, new Observer<RecipeComplete>() {
             @Override
@@ -58,17 +66,22 @@ public class RecipeDetailsIngredientsFragment extends Fragment {
     }
 
     private void populateUi(RecipeComplete recipeComplete) {
-        String ingredients = "";
         Iterator<Ingredient> ingredientIterator = recipeComplete.getIngredients().iterator();
         Ingredient ingredient;
+        recipeid = recipeComplete.getId();
         while (ingredientIterator.hasNext()) {
             ingredient = ingredientIterator.next();
+            ingredients += "\u2022  ";
             ingredients += ingredient.getIngredient();
             ingredients += " "+ingredient.getQuantity();
             ingredients += " "+ingredient.getMeasure();
-            ingredients += System.getProperty("line.separator");
+            ingredients += "<br/>";
         }
-        ingredientsList.setText(ingredients);
+        ingredientsList.setText(Html.fromHtml(ingredients));
+    }
+
+    public void addToShoppingList() {
+        recipeDetailsViewModel.addToShoppingList(recipeid, ingredients);
     }
 
 

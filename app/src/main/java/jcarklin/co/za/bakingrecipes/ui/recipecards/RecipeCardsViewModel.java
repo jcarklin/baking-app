@@ -27,15 +27,15 @@ public class RecipeCardsViewModel extends AndroidViewModel {
         return recipes;
     }
 
-//    public LiveData<List<Recipe>> refreshRecipes() {
-//        return
-//    }
-//
     public LiveData<FetchStatus> getStatus() {
         return bakingAppRepository.getStatus();
     }
 
     public void setSelectedRecipe(Integer id) {
         bakingAppRepository.setSelectedRecipe(id);
+    }
+
+    public void refresh() {
+        bakingAppRepository.refreshRecipes();
     }
 }

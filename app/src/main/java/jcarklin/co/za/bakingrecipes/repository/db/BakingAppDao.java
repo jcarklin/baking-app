@@ -13,14 +13,11 @@ import java.util.List;
 import jcarklin.co.za.bakingrecipes.repository.model.Ingredient;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
 import jcarklin.co.za.bakingrecipes.repository.model.Step;
 
 @Dao
 public abstract class BakingAppDao {
-
-//
-//    @Transaction
-//    public abstract LiveData<List<RecipeComplete>> fetchAllRecipes();
 
     @Query("SELECT * FROM recipes")
     public abstract LiveData<List<Recipe>> getRecipesList();
@@ -42,11 +39,11 @@ public abstract class BakingAppDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract List<Long> addSteps(List<Step> steps);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract long addShoppingList(ShoppingList shoppingList);
+
     @Query("DELETE FROM recipes")
     public abstract int clearRecipes();
-
-    //@Query("SELECT * FROM ingredients WHERE shopping_list = 1")
-    //public abstract List<Ingredient> getShoppingList();
 
     @Update
     public abstract int updateShoppingList(Ingredient ingredient);

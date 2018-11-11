@@ -8,9 +8,10 @@ import android.util.Log;
 
 import jcarklin.co.za.bakingrecipes.repository.model.Ingredient;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
+import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
 import jcarklin.co.za.bakingrecipes.repository.model.Step;
 
-@Database(entities = {Recipe.class,Step.class,Ingredient.class},version = 1,exportSchema = false)
+@Database(entities = {Recipe.class,Step.class,Ingredient.class, ShoppingList.class},version = 1,exportSchema = false)
 public abstract class BakingAppDatabase extends RoomDatabase {
 
     private static BakingAppDatabase ourInstance = null;

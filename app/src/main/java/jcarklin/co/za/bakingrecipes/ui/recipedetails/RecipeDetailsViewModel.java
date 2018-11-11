@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 
 import jcarklin.co.za.bakingrecipes.repository.BakingAppRepository;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
 
 public class RecipeDetailsViewModel extends AndroidViewModel {
 
@@ -20,5 +21,8 @@ public class RecipeDetailsViewModel extends AndroidViewModel {
         return bakingAppRepository.getSelectedRecipe();
     }
 
-
+    public void addToShoppingList(Integer recipeid, String ingredients) {
+        ShoppingList shoppingList = new ShoppingList(recipeid, ingredients);
+        bakingAppRepository.addToShoppingList(shoppingList);
+    }
 }

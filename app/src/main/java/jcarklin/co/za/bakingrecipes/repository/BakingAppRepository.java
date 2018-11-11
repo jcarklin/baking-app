@@ -20,6 +20,7 @@ import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDatabase;
 import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
@@ -156,5 +157,14 @@ public class BakingAppRepository {
 
     public LiveData<RecipeComplete> getSelectedRecipe() {
         return selectedRecipe;
+    }
+
+    public void addToShoppingList(ShoppingList shoppingList) {
+        long inserted = bakingAppDao.addShoppingList(shoppingList);
+        if (inserted > 0) {
+            status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.added_to_shopping_list));
+        } else {
+            status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error_adding_to_shopping_list));
+        }
     }
 }

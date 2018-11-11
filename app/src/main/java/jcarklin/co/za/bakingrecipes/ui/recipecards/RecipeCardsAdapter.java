@@ -19,6 +19,8 @@ import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 
+import static jcarklin.co.za.bakingrecipes.BakingApplication.test;
+
 public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.RecipeCardViewHolder> {
 
     private List<Recipe> recipeList = new ArrayList<>();
@@ -86,6 +88,9 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
 
         public void bind(Recipe recipe) {
             recipeName.setText(recipe.getName());
+            if (test){
+                recipe.setImage("https://food.fnr.sndimg.com/content/dam/images/food/fullset/2013/12/9/0/FNK_Cheesecake_s4x3.jpg.rend.hgtvcom.826.620.suffix/1387411272847.jpeg");
+            }
             if (!recipe.getImage().isEmpty()) {
                 Picasso.get()
                         .load(recipe.getImage())
@@ -93,7 +98,7 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
                         .error(R.drawable.ic_cake_black_48dp)
                         .into(recipeThumbnail);
             }
-            numServings.setText(context.getString(R.string.number_of_servings) + recipe.getServings());
+            numServings.setText(context.getString(R.string.number_of_servings) +" " + recipe.getServings());
 //            numIngredients.setText("Number of Ingredients: " + recipe.getIngredients().size());
 //            numSteps.setText("Number of Steps: " + recipe.getSteps().size());
         }
