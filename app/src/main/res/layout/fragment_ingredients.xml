@@ -9,13 +9,12 @@
     android:layout_margin="20dp"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="2dp"
-    tools:context=".ui.recipedetails.RecipeDetailsActivity">
+    tools:context="jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/recipe_ingredients"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.recipedetails.RecipeDetailsHeadingFragment">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv_ingredients_heading"

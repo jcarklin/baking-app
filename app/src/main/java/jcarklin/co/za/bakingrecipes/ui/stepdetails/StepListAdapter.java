@@ -1,4 +1,4 @@
-package jcarklin.co.za.bakingrecipes.ui.recipedetails;
+package jcarklin.co.za.bakingrecipes.ui.stepdetails;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -19,10 +19,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
-import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.Step;
 
-public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.RecipeStepsViewHolder> {
+public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.RecipeStepsViewHolder> {
 
     private List<Step> stepList = new ArrayList<>();
     private final RecipeStepOnClickHandler recipeStepOnClickHandler;
@@ -32,7 +31,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
         void onClick(Step selectedStep);
     }
 
-    public RecipeStepsAdapter(RecipeStepOnClickHandler recipeStepOnClickHandler) {
+    public StepListAdapter(RecipeStepOnClickHandler recipeStepOnClickHandler) {
         this.recipeStepOnClickHandler = recipeStepOnClickHandler;
     }
 
@@ -46,7 +45,7 @@ public class RecipeStepsAdapter extends RecyclerView.Adapter<RecipeStepsAdapter.
     public RecipeStepsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.step_list_item, viewGroup, false);
+        View view = inflater.inflate(R.layout.item_step_list, viewGroup, false);
         return new RecipeStepsViewHolder(view);
     }
 

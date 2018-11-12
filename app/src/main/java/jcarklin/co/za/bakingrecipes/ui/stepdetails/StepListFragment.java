@@ -1,4 +1,4 @@
-package jcarklin.co.za.bakingrecipes.ui.recipedetails;
+package jcarklin.co.za.bakingrecipes.ui.stepdetails;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -17,25 +17,26 @@ import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 import jcarklin.co.za.bakingrecipes.repository.model.Step;
+import jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsViewModel;
 
 
-public class RecipeDetailsStepsFragment extends Fragment implements RecipeStepsAdapter.RecipeStepOnClickHandler {
+public class StepListFragment extends Fragment implements StepListAdapter.RecipeStepOnClickHandler {
 
     private RecipeDetailsViewModel recipeDetailsViewModel;
-    private RecipeStepsAdapter recipeStepsAdapter;
+    private StepListAdapter stepsListingAdapter;
 
     @BindView(R.id.rv_recipe_steps)
     RecyclerView recipeSteps;
 
-    public static RecipeDetailsStepsFragment newInstance() {
-        return new RecipeDetailsStepsFragment();
+    public static StepListFragment newInstance() {
+        return new StepListFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recipe_details_steps, container, false);
+        View view = inflater.inflate(R.layout.fragment_step_list, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -47,7 +48,7 @@ public class RecipeDetailsStepsFragment extends Fragment implements RecipeStepsA
         recipeDetailsViewModel.getSelectedRecipe().observe(this, new Observer<RecipeComplete>() {
             @Override
             public void onChanged(@Nullable RecipeComplete recipeComplete) {
-                recipeStepsAdapter.setSteps(recipeComplete.getSteps());
+                stepsListingAdapter.setSteps(recipeComplete.getSteps());
             }
         });
     }
@@ -55,8 +56,8 @@ public class RecipeDetailsStepsFragment extends Fragment implements RecipeStepsA
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recipeStepsAdapter = new RecipeStepsAdapter(this);
-        recipeSteps.setAdapter(recipeStepsAdapter);
+        stepsListingAdapter = new StepListAdapter(this);
+        recipeSteps.setAdapter(stepsListingAdapter);
         recipeSteps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recipeSteps.setHasFixedSize(true);
         recipeSteps.setNestedScrollingEnabled(false);

@@ -45,7 +45,7 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
     public RecipeCardViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.recipe_card, viewGroup, false);
+        View view = inflater.inflate(R.layout.item_recipe_card, viewGroup, false);
         return new RecipeCardViewHolder(view);
     }
 

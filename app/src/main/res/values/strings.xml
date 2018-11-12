@@ -9,4 +9,6 @@
     <string name="add_to_shopping_list">Add to Shopping List</string>
     <string name="added_to_shopping_list">Successfully added ingredients to shopping list</string>
     <string name="error_adding_to_shopping_list">Failed to add ingredients to shopping list</string>
+    <string name="title_step_list">Steps</string>
+    <string name="title_step_detail">Step Detail</string>
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_centerInParent="true"
     android:layout_centerVertical="false"
-    tools:context=".ui.recipecards.MainActivity">
+    tools:context="jcarklin.co.za.bakingrecipes.ui.recipecards.MainActivity">
 
     <fragment android:name="jcarklin.co.za.bakingrecipes.ui.recipecards.RecipeCardsFragment"
         android:id="@+id/list"
