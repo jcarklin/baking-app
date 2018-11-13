@@ -22,13 +22,13 @@ import jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsViewModel;
 
 public class StepDetailsActivity extends AppCompatActivity implements StepListAdapter.RecipeStepOnClickHandler {
 
+    private static final String FRAGMENT_STEP_DETAIL_WITH_VIDEO = "FRAGMENT_WITH_VIDEO";
     private int selectedStepIndex = 0;
     private RecipeDetailsViewModel recipeDetailsViewModel;
     private ActionBar actionBar;
-    List<Step> selectedRecipeSteps;
 
-    @BindView(R.id.tv_short_description)
-    TextView shortDescription;
+//    @BindView(R.id.tv_short_description)
+//    TextView shortDescription;
     @BindView(R.id.btn_next)
     Button nextButton;
     @BindView(R.id.btn_prev)
@@ -48,18 +48,12 @@ public class StepDetailsActivity extends AppCompatActivity implements StepListAd
                     actionBar.setTitle(recipe.getName());
                     actionBar.setSubtitle(getString(R.string.number_of_servings)+" "+recipe.getServings());
                 }
-                selectedRecipeSteps = recipe.getSteps();
                 populateUI();
             }
         });
         StepDetailsFragment stepDetailsFragment;
         if (savedInstanceState != null && savedInstanceState.containsKey("stepIndex")) {
             selectedStepIndex = savedInstanceState.getInt("stepIndex");
-            selectedRecipeSteps = recipeDetailsViewModel.getSelectedRecipe().getValue().getSteps();
-            stepDetailsFragment = (StepDetailsFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.step_details_fragment_container);
-
-            manageFragment(stepDetailsFragment);
         } else {
             selectedStepIndex = getIntent().getIntExtra("selectedStep", 0);
         }
@@ -68,13 +62,18 @@ public class StepDetailsActivity extends AppCompatActivity implements StepListAd
             @Override
             public void onClick(View view) {
                 selectedStepIndex++;
+                if (selectedStepIndex==recipeDetailsViewModel.getSelectedRecipeSteps().size()) {
+                    selectedStepIndex--;
+                }
                 populateUI();
             }
         });
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectedStepIndex--;
+                if (selectedStepIndex>0) {
+                    selectedStepIndex--;
+                }
                 populateUI();
             }
         });
@@ -82,24 +81,25 @@ public class StepDetailsActivity extends AppCompatActivity implements StepListAd
     }
 
     private void populateUI() {
+        List<Step> selectedRecipeSteps = recipeDetailsViewModel.getSelectedRecipeSteps();
         int visible = selectedStepIndex==0?View.INVISIBLE:View.VISIBLE;
         prevButton.setVisibility(visible);
         visible = selectedStepIndex==selectedRecipeSteps.size()-1?View.INVISIBLE:View.VISIBLE;
         nextButton.setVisibility(visible);
-
         Step step = selectedRecipeSteps.get(selectedStepIndex);
-        shortDescription.setText(step.getId()+" - " +step.getShortDescription());
-
-        manageFragment(StepDetailsFragment.newInstance());
+        if (actionBar != null) {
+            actionBar.setSubtitle(step.getId()+" - " +step.getShortDescription());
+        }
+ //       shortDescription.setText(step.getId()+" - " +step.getShortDescription());
+        manageFragment(StepDetailsFragment.newInstance(), step);
     }
 
-    private void manageFragment(StepDetailsFragment fragment) {
+    private void manageFragment(StepDetailsFragment fragment, Step step) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Step step = selectedRecipeSteps.get(selectedStepIndex);
         fragment.setStep(step);
         if (getString(R.string.screen_type).equals("phone")) { //todo make constant
             fragmentManager.beginTransaction()
-                    .replace(R.id.step_details_fragment_container,fragment)
+                    .replace(R.id.step_details_fragment_container,fragment,FRAGMENT_STEP_DETAIL_WITH_VIDEO)
                     .commit();
         }
     }

@@ -1,5 +1,6 @@
 package jcarklin.co.za.bakingrecipes.ui.recipecards;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,14 +16,12 @@ public class MainActivity extends AppCompatActivity  {
 
     private RecipeCardsViewModel recipeCardsViewModel;
 
-//    private MenuItem refresh;
-//    private MenuItem shoppingList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        recipeCardsViewModel = ViewModelProviders.of(this).get(RecipeCardsViewModel.class);
     }
 
     @Override
@@ -34,8 +33,6 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-//        refresh = menu.findItem(R.id.action_refresh);
-//        shoppingList = menu.findItem(R.id.action_shopping_list);
         ActionBar actionBar = this.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("Baking Recipes");
