@@ -44,12 +44,17 @@ public class StepDetailsActivity extends AppCompatActivity implements
                 populateUI();
             }
         });
-        StepDetailsFragment stepDetailsFragment;
         if (savedInstanceState != null && savedInstanceState.containsKey("stepIndex")) {
             selectedStepIndex = savedInstanceState.getInt("stepIndex");
         } else {
             selectedStepIndex = getIntent().getIntExtra("selectedStep", 0);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        populateUI();
     }
 
     private void populateUI() {
@@ -67,10 +72,10 @@ public class StepDetailsActivity extends AppCompatActivity implements
                 navigation.showPrevButton(selectedStepIndex==0?View.INVISIBLE:View.VISIBLE);
                 navigation.showNextButton(selectedStepIndex==selectedRecipeSteps.size()-1?View.INVISIBLE:View.VISIBLE);
             }
-            fragmentManager.beginTransaction()
-                    .replace(R.id.step_details_fragment_container,stepDetailsFragment,FRAGMENT_STEP_DETAIL_WITH_VIDEO)
-                    .commit();
         }
+        fragmentManager.beginTransaction()
+                .replace(R.id.step_details_fragment_container,stepDetailsFragment,FRAGMENT_STEP_DETAIL_WITH_VIDEO)
+                .commitNow();
     }
 
     @Override

@@ -57,14 +57,24 @@ public class StepDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        populateUi();
+    }
+
+    private void populateUi() {
         playerView.setDefaultArtwork(getResources().getDrawable(R.drawable.ic_cake_black_48dp));
         stepDescription.setText(selectedStep.getDescription());
     }
 
+
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override

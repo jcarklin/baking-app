@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -64,9 +63,6 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.Recipe
 
         @BindView(R.id.tv_step_number)
         TextView stepNumber;
-
-        @BindView(R.id.iv_step_arrow)
-        ImageView stepArrow;
 
         RecipeStepsViewHolder(View itemView) {
             super(itemView);
