@@ -10,16 +10,19 @@ public class ShoppingList implements Parcelable {
 
     @PrimaryKey
     protected Integer id;
+    protected String recipeName;
     protected String shoppingList;
 
-    public ShoppingList(Integer id, String shoppingList) {
+    public ShoppingList(Integer id, String recipeName, String shoppingList) {
         super();
         this.id = id;
+        this.recipeName = recipeName;
         this.shoppingList = shoppingList;
     }
 
     public ShoppingList(Parcel in) {
         this.id = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.recipeName = ((String) in.readValue((String.class.getClassLoader())));
         this.shoppingList = ((String) in.readValue((String.class.getClassLoader())));
     }
 
@@ -31,6 +34,7 @@ public class ShoppingList implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeValue(id);
+        parcel.writeValue(recipeName);
         parcel.writeValue(shoppingList);
     }
 
@@ -60,5 +64,13 @@ public class ShoppingList implements Parcelable {
 
     public void setShoppingList(String shoppingList) {
         this.shoppingList = shoppingList;
+    }
+
+    public String getRecipeName() {
+        return recipeName;
+    }
+
+    public void setRecipeName(String recipeName) {
+        this.recipeName = recipeName;
     }
 }

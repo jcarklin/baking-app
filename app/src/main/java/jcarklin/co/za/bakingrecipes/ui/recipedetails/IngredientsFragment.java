@@ -10,6 +10,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Iterator;
@@ -25,10 +26,11 @@ public class IngredientsFragment extends Fragment {
 
     private RecipeDetailsViewModel recipeDetailsViewModel;
     private String ingredients = "";
-    private Integer recipeid;
 
     @BindView(R.id.tv_ingredients_list)
     TextView ingredientsList;
+    @BindView(R.id.btn_add_to_list)
+    Button addToList;
 
     public static IngredientsFragment newInstance() {
         return new IngredientsFragment();
@@ -59,12 +61,19 @@ public class IngredientsFragment extends Fragment {
                 populateUi(recipeComplete);
             }
         });
+        addToList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addToShoppingList();
+            }
+        });
+
     }
 
     private void populateUi(RecipeComplete recipeComplete) {
         Iterator<Ingredient> ingredientIterator = recipeComplete.getIngredients().iterator();
         Ingredient ingredient;
-        recipeid = recipeComplete.getId();
+
         while (ingredientIterator.hasNext()) {
             ingredient = ingredientIterator.next();
             ingredients += "\u2022  ";
@@ -77,7 +86,7 @@ public class IngredientsFragment extends Fragment {
     }
 
     public void addToShoppingList() {
-        recipeDetailsViewModel.addToShoppingList(recipeid, ingredients);
+        recipeDetailsViewModel.addToShoppingList(ingredients);
     }
 
 

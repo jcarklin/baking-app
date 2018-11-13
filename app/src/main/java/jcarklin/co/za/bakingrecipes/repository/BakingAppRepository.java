@@ -50,9 +50,9 @@ public class BakingAppRepository {
         refresh = true;
         bakingAppDao = BakingAppDatabase.getInstance(application).bakingAppDao();
         recipes = bakingAppDao.getRecipesList();
-        setupNetworkApi();
         executor = Executors.newSingleThreadExecutor();
         connectivityManager = (ConnectivityManager)application.getSystemService(Context.CONNECTIVITY_SERVICE);
+        setupNetworkApi();
     }
 
     public static BakingAppRepository getInstance(Application application) {
@@ -159,12 +159,22 @@ public class BakingAppRepository {
         return selectedRecipe;
     }
 
-    public void addToShoppingList(ShoppingList shoppingList) {
-        long inserted = bakingAppDao.addShoppingList(shoppingList);
-        if (inserted > 0) {
-            status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.added_to_shopping_list));
-        } else {
-            status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error_adding_to_shopping_list));
-        }
+    public void addToShoppingList(final ShoppingList shoppingList) {
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                long inserted = bakingAppDao.addShoppingList(shoppingList);
+                if (inserted > 0) {
+                    status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.added_to_shopping_list));
+                } else {
+                    status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error_adding_to_shopping_list));
+                }
+            }
+        });
+    }
+
+    public void clearStatus() {
+        status.setValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
     }
 }

@@ -5,4 +5,6 @@
     <string name="title_activity_shopping_list">View Shopping List</string>
     <string name="ingredients">Ingredients</string>
     <string name="add_to_shopping_list">Add to Shopping List</string>
+    <string name="clear_shopping_list">Clear shopping list</string>
+    <string name="confirm_clear_shopping_list">Are you sure you want to clear your shopping list?</string>
 </resources>

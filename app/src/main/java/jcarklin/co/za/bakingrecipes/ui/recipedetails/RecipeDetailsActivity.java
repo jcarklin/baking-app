@@ -2,25 +2,32 @@ package jcarklin.co.za.bakingrecipes.ui.recipedetails;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
+import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.ui.stepdetails.StepDetailsActivity;
+import jcarklin.co.za.bakingrecipes.ui.stepdetails.StepListAdapter;
 
 import static jcarklin.co.za.bakingrecipes.BakingApplication.test;
 
-public class RecipeDetailsActivity extends AppCompatActivity {
+public class RecipeDetailsActivity extends AppCompatActivity implements StepListAdapter.RecipeStepOnClickHandler{
 
     private RecipeDetailsViewModel recipeDetailsViewModel;
-    ActionBar actionBar;
+    private Toast toast;
+    private ActionBar actionBar;
+
     @BindView(R.id.background_image)
     ImageView background;
 
@@ -51,29 +58,34 @@ public class RecipeDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-        //ToDo
-//        recipeCardsViewModel.getStatus().observe(this, new Observer<FetchStatus>() {
-//            @Override
-//            public void onChanged(@Nullable FetchStatus fetchStatus) {
-//                if (fetchStatus==null || fetchStatus.getStatus().equals(FetchStatus.Status.LOADING)) {
-//                    showProgressBar();
-//                } else if (fetchStatus.getStatus().equals(FetchStatus.Status.CRITICAL_ERROR)) {
-//                    showError(getString(fetchStatus.getStatusMessage()));
-//                } else {
-//                    showRecipes();
-//                }
-//            }
-//        });
-
-
-
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .replace(R.id.recipe_heading, RecipeDetailsHeadingFragment.newInstance())
-//                    .replace(R.id.recipe_ingredients, RecipeDetailsIngredientsFragment.newInstance())
-//                    .commitNow();
-//        }
+        recipeDetailsViewModel.getStatus().observe(this, new Observer<FetchStatus>() {
+            @Override
+            public void onChanged(@Nullable FetchStatus fetchStatus) {
+                if (fetchStatus==null || fetchStatus.getStatus().equals(FetchStatus.Status.LOADING)) {
+                    //showProgressBar();
+                } else if (fetchStatus.getStatus().equals(FetchStatus.Status.TOAST)) {
+                    showToast(getString(fetchStatus.getStatusMessage()));
+                    recipeDetailsViewModel.clearStatus();
+                } else if (fetchStatus.getStatus().equals(FetchStatus.Status.CRITICAL_ERROR)) {
+                    //showError();
+                } else {
+                    //showRecipeDetails();
+                }
+            }
+        });//todo
     }
 
+    private void showToast(String message) {
+        if (toast != null)
+            toast.cancel();
+        toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        toast.show();
+    }
 
+    @Override
+    public void onClick(int selectedStepIndex) {
+        Intent intent = new Intent(this, StepDetailsActivity.class);
+        intent.putExtra("selectedStep",selectedStepIndex);
+        startActivity(intent);
+    }
 }

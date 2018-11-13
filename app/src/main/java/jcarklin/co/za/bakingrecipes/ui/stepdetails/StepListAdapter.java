@@ -6,12 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +24,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.Recipe
     private Context context;
 
     public interface RecipeStepOnClickHandler {
-        void onClick(Step selectedStep);
+        void onClick(int selectedStepIndex);
     }
 
     public StepListAdapter(RecipeStepOnClickHandler recipeStepOnClickHandler) {
@@ -85,9 +81,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.Recipe
 
         @Override
         public void onClick(View v) {
-//            int adapterPosition = getAdapterPosition();
-//            Recipe selectedRecipe = recipeList.get(adapterPosition);
-//            recipeCardsOnClickHandler.onClick(selectedRecipe);
+            recipeStepOnClickHandler.onClick(getAdapterPosition());
         }
     }
 }

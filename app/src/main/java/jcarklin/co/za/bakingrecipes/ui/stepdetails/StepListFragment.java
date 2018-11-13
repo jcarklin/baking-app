@@ -2,6 +2,7 @@ package jcarklin.co.za.bakingrecipes.ui.stepdetails;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,14 +17,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
-import jcarklin.co.za.bakingrecipes.repository.model.Step;
 import jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsViewModel;
 
 
-public class StepListFragment extends Fragment implements StepListAdapter.RecipeStepOnClickHandler {
+public class StepListFragment extends Fragment  {
 
     private RecipeDetailsViewModel recipeDetailsViewModel;
     private StepListAdapter stepsListingAdapter;
+    private StepListAdapter.RecipeStepOnClickHandler onClickHandler;
 
     @BindView(R.id.rv_recipe_steps)
     RecyclerView recipeSteps;
@@ -56,16 +57,21 @@ public class StepListFragment extends Fragment implements StepListAdapter.Recipe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        stepsListingAdapter = new StepListAdapter(this);
+        stepsListingAdapter = new StepListAdapter(onClickHandler);
         recipeSteps.setAdapter(stepsListingAdapter);
         recipeSteps.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recipeSteps.setHasFixedSize(true);
         recipeSteps.setNestedScrollingEnabled(false);
     }
 
-
     @Override
-    public void onClick(Step selectedStep) {
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            onClickHandler = (StepListAdapter.RecipeStepOnClickHandler)context;
+        } catch (ClassCastException cce) {
+            throw new ClassCastException(context.toString() + " must implement RecipeStepOnClickHandler");
+        }
 
     }
 }

@@ -31,6 +31,7 @@ import jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsActivity;
 public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.RecipeCardsOnClickHandler {
 
     private RecipeCardsAdapter recipeCardsAdapter = null;
+    private Toast toast;
 
 
     @BindView(R.id.rv_recipes)
@@ -98,8 +99,10 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
             public void onChanged(@Nullable FetchStatus fetchStatus) {
                 if (fetchStatus==null || fetchStatus.getStatus().equals(FetchStatus.Status.LOADING)) {
                     showProgressBar();
+                } else if (fetchStatus.getStatus().equals(FetchStatus.Status.TOAST)) {
+                    showToast(getString(fetchStatus.getStatusMessage()));
                 } else if (fetchStatus.getStatus().equals(FetchStatus.Status.CRITICAL_ERROR)) {
-                    showError(getString(fetchStatus.getStatusMessage()));
+                    showError();
                 } else {
                     showRecipes();
                 }
@@ -145,11 +148,11 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
         errorIcon.setImageResource(R.drawable.ic_error_outline_red_24dp);
         errorIcon.setVisibility(View.VISIBLE);
     }
-    Toast toast;
-    private void showError(String msg) {
+
+    private void showToast(String message) {
         if (toast != null)
             toast.cancel();
-        toast = Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT);
+        toast = Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
         toast.show();
     }
 }

@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#09C"
+    android:padding="@dimen/widget_margin"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/tv_shopping_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="#09C"
+        android:contentDescription="@string/title_activity_shopping_list"
+        android:textColor="#ffffff" />
+
+    <Button
+        android:id="@+id/btn_clear_list"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:gravity="right"
+        android:text="@string/clear_shopping_list"
+        android:textColor="#80CBC4" />
+
+</LinearLayout>
