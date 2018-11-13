@@ -8,21 +8,6 @@
     android:layout_height="match_parent"
     tools:context="jcarklin.co.za.bakingrecipes.ui.stepdetails.StepDetailsActivity">
 
-    <!--<TextView-->
-        <!--android:id="@+id/tv_short_description"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginLeft="8dp"-->
-        <!--android:layout_marginTop="16dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:layout_marginRight="8dp"-->
-        <!--android:text="TextView"-->
-        <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--tools:text="Step short description" />-->
 
     <FrameLayout
         android:id="@+id/step_details_fragment_container"
@@ -38,7 +23,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></FrameLayout>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <LinearLayout
         android:layout_width="match_parent"

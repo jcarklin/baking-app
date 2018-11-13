@@ -27,8 +27,6 @@ public class StepDetailsActivity extends AppCompatActivity implements StepListAd
     private RecipeDetailsViewModel recipeDetailsViewModel;
     private ActionBar actionBar;
 
-//    @BindView(R.id.tv_short_description)
-//    TextView shortDescription;
     @BindView(R.id.btn_next)
     Button nextButton;
     @BindView(R.id.btn_prev)
@@ -90,7 +88,6 @@ public class StepDetailsActivity extends AppCompatActivity implements StepListAd
         if (actionBar != null) {
             actionBar.setSubtitle(step.getId()+" - " +step.getShortDescription());
         }
- //       shortDescription.setText(step.getId()+" - " +step.getShortDescription());
         manageFragment(StepDetailsFragment.newInstance(), step);
     }
 
