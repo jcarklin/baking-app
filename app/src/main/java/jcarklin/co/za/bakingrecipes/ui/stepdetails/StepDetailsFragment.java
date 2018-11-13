@@ -1,7 +1,5 @@
 package jcarklin.co.za.bakingrecipes.ui.stepdetails;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,29 +8,23 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.exoplayer2.ui.PlayerView;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
-import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 import jcarklin.co.za.bakingrecipes.repository.model.Step;
-import jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsViewModel;
 
 public class StepDetailsFragment extends Fragment {
 
-    private RecipeDetailsViewModel recipeDetailsViewModel;
-
-
-    int stepIndex = 0;
-    Step selectedStep;
-    List<Step> selectedRecipeSteps;
+    private Step selectedStep;
 
     @BindView(R.id.pv_step_video)
     PlayerView playerView;
+    @BindView(R.id.tv_step_description)
+    TextView stepDescription;
 
     public StepDetailsFragment() {
 
@@ -58,19 +50,14 @@ public class StepDetailsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        recipeDetailsViewModel = ViewModelProviders.of(getActivity()).get(RecipeDetailsViewModel.class);
-        recipeDetailsViewModel.getSelectedRecipe().observe(this, new Observer<RecipeComplete>() {
-                @Override
-                public void onChanged(@Nullable RecipeComplete recipeComplete) {
-                    selectedRecipeSteps = recipeComplete.getSteps();
-                }
-            });
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         playerView.setDefaultArtwork(getResources().getDrawable(R.drawable.ic_cake_black_48dp));
+        stepDescription.setText(selectedStep.getDescription());
     }
 
     @Override
@@ -84,4 +71,7 @@ public class StepDetailsFragment extends Fragment {
         super.onDetach();
     }
 
+    public void setStep(Step step) {
+        this.selectedStep = step;
+    }
 }

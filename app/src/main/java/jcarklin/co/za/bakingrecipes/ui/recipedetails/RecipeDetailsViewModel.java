@@ -37,4 +37,5 @@ public class RecipeDetailsViewModel extends AndroidViewModel {
     public void clearStatus() {
         bakingAppRepository.clearStatus();
     }
+
 }
