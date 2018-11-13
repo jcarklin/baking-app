@@ -8,29 +8,24 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 import jcarklin.co.za.bakingrecipes.repository.model.Step;
 import jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsViewModel;
 
-public class StepDetailsActivity extends AppCompatActivity implements StepListAdapter.RecipeStepOnClickHandler {
+public class StepDetailsActivity extends AppCompatActivity implements
+        StepListAdapter.RecipeStepOnClickHandler,
+        StepDetailsNavigationFragment.StepDetailNavigationOnClickHandler {
 
     private static final String FRAGMENT_STEP_DETAIL_WITH_VIDEO = "FRAGMENT_WITH_VIDEO";
     private int selectedStepIndex = 0;
     private RecipeDetailsViewModel recipeDetailsViewModel;
     private ActionBar actionBar;
 
-    @BindView(R.id.btn_next)
-    Button nextButton;
-    @BindView(R.id.btn_prev)
-    Button prevButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,48 +50,25 @@ public class StepDetailsActivity extends AppCompatActivity implements StepListAd
         } else {
             selectedStepIndex = getIntent().getIntExtra("selectedStep", 0);
         }
-
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectedStepIndex++;
-                if (selectedStepIndex==recipeDetailsViewModel.getSelectedRecipeSteps().size()) {
-                    selectedStepIndex--;
-                }
-                populateUI();
-            }
-        });
-        prevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedStepIndex>0) {
-                    selectedStepIndex--;
-                }
-                populateUI();
-            }
-        });
-
     }
 
     private void populateUI() {
         List<Step> selectedRecipeSteps = recipeDetailsViewModel.getSelectedRecipeSteps();
-        int visible = selectedStepIndex==0?View.INVISIBLE:View.VISIBLE;
-        prevButton.setVisibility(visible);
-        visible = selectedStepIndex==selectedRecipeSteps.size()-1?View.INVISIBLE:View.VISIBLE;
-        nextButton.setVisibility(visible);
         Step step = selectedRecipeSteps.get(selectedStepIndex);
         if (actionBar != null) {
             actionBar.setSubtitle(step.getId()+" - " +step.getShortDescription());
         }
-        manageFragment(StepDetailsFragment.newInstance(), step);
-    }
-
-    private void manageFragment(StepDetailsFragment fragment, Step step) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragment.setStep(step);
+        StepDetailsFragment stepDetailsFragment = StepDetailsFragment.newInstance();
+        stepDetailsFragment.setStep(step);
         if (getString(R.string.screen_type).equals("phone")) { //todo make constant
+            StepDetailsNavigationFragment navigation = (StepDetailsNavigationFragment) fragmentManager.findFragmentById(R.id.btns_next_prev);
+            if (navigation != null) {
+                navigation.showPrevButton(selectedStepIndex==0?View.INVISIBLE:View.VISIBLE);
+                navigation.showNextButton(selectedStepIndex==selectedRecipeSteps.size()-1?View.INVISIBLE:View.VISIBLE);
+            }
             fragmentManager.beginTransaction()
-                    .replace(R.id.step_details_fragment_container,fragment,FRAGMENT_STEP_DETAIL_WITH_VIDEO)
+                    .replace(R.id.step_details_fragment_container,stepDetailsFragment,FRAGMENT_STEP_DETAIL_WITH_VIDEO)
                     .commit();
         }
     }
@@ -110,6 +82,23 @@ public class StepDetailsActivity extends AppCompatActivity implements StepListAd
     @Override
     public void onClick(int selectedStepIndex) {
         this.selectedStepIndex = selectedStepIndex;
+        populateUI();
+    }
+
+    @Override
+    public void onClickNext() {
+        selectedStepIndex++;
+        if (selectedStepIndex==recipeDetailsViewModel.getSelectedRecipeSteps().size()) {
+            selectedStepIndex--;
+        }
+        populateUI();
+    }
+
+    @Override
+    public void onClickPrevious() {
+        if (selectedStepIndex>0) {
+            selectedStepIndex--;
+        }
         populateUI();
     }
 }

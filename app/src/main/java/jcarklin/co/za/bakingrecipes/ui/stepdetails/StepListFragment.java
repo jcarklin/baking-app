@@ -72,6 +72,7 @@ public class StepListFragment extends Fragment  {
         } catch (ClassCastException cce) {
             throw new ClassCastException(context.toString() + " must implement RecipeStepOnClickHandler");
         }
-
     }
+
+
 }
