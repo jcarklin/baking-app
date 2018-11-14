@@ -48,6 +48,12 @@ public abstract class BakingAppDao {
     @Update
     public abstract int updateShoppingList(Ingredient ingredient);
 
+    @Query("SELECT * FROM shopping_list")
+    public abstract List<ShoppingList> getShoppingLists();
+
+    @Query("DELETE FROM shopping_list")
+    public abstract int clearShoppingList();
+
     @Transaction
     public long[] insertCompleteRecipes(List<RecipeComplete> recipes) {
         long[] ids = new long[recipes.size()];

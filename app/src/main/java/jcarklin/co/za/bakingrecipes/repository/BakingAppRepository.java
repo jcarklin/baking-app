@@ -46,6 +46,8 @@ public class BakingAppRepository {
 
     private final ConnectivityManager connectivityManager;
 
+    private List<ShoppingList> shoppingLists = null;
+
     private BakingAppRepository(Application application) {
         refresh = true;
         bakingAppDao = BakingAppDatabase.getInstance(application).bakingAppDao();
@@ -100,6 +102,9 @@ public class BakingAppRepository {
                         status.postValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
                     }
                 }
+                //refreshShoppingList
+                shoppingLists = bakingAppDao.getShoppingLists();
+
             } catch (IOException e) {
                 e.printStackTrace();
                 status.postValue(new FetchStatus(FetchStatus.Status.CRITICAL_ERROR,R.string.error));
@@ -170,11 +175,27 @@ public class BakingAppRepository {
                 } else {
                     status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error_adding_to_shopping_list));
                 }
+                shoppingLists = bakingAppDao.getShoppingLists();
             }
         });
+    }
+
+    public String getShoppingList() {
+
+        StringBuilder shoppingList = new StringBuilder();
+        for (ShoppingList shList:shoppingLists) {
+            shoppingList.append("<div>")
+            .append("<h3>"+shList.getRecipeName()+"<h3>")
+            .append(shList.getShoppingList())
+            .append("</div>");
+        }
+
+        return shoppingList.toString();
     }
 
     public void clearStatus() {
         status.setValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
     }
+
+
 }

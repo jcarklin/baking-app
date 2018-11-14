@@ -8,31 +8,28 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import jcarklin.co.za.bakingrecipes.R;
+import jcarklin.co.za.bakingrecipes.service.ShoppingListWidgetService;
 import jcarklin.co.za.bakingrecipes.ui.recipecards.MainActivity;
 
-public class ShoppingListWidget extends AppWidgetProvider {
+public class ShoppingListWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+                                CharSequence shoppinglist, int appWidgetId) {
 
-        CharSequence shoppinglist = "";
-
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.shopping_list_widget);
         views.setTextViewText(R.id.tv_shopping_list, shoppinglist);
-        Intent intent = new Intent(context,MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
-        views.setOnClickPendingIntent(R.id.btn_clear_list,pendingIntent);
-
-        // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
+        ShoppingListWidgetService.startActionUpdateShoppingListWidgets(context);
+    }
+
+    public static void updateShoppingListWidgets(Context context, AppWidgetManager appWidgetManager,
+                                                 CharSequence shoppinglist, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+            updateAppWidget(context, appWidgetManager, shoppinglist, appWidgetId);
         }
     }
 
