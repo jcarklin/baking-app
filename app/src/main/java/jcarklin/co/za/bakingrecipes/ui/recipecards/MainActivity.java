@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity  {
                 return true;
             case R.id.action_shopping_list:
                 Toast toast = Toast.makeText(this, "This will show a shopping list", Toast.LENGTH_SHORT);
-                toast.show();
+                toast.show();//todo show/clear shopping list dialogue fragment
             default:
                 return super.onOptionsItemSelected(item);
         }
