@@ -3,6 +3,7 @@ package jcarklin.co.za.bakingrecipes.ui.shoppinglist;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
@@ -12,7 +13,7 @@ import jcarklin.co.za.bakingrecipes.service.ShoppingListWidgetService;
 import jcarklin.co.za.bakingrecipes.ui.recipecards.MainActivity;
 
 public class ShoppingListWidgetProvider extends AppWidgetProvider {
-
+//todo add clear shopping list
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 CharSequence shoppinglist, int appWidgetId) {
 
@@ -31,6 +32,16 @@ public class ShoppingListWidgetProvider extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, shoppinglist, appWidgetId);
         }
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if (intent.getAction().equals(ShoppingListWidgetService.ACTION_UPDATE_SHOPPING_LIST)) {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, ShoppingListWidgetProvider.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds,R.id.tv_shopping_list);
+        }
+        super.onReceive(context, intent);
     }
 
     @Override

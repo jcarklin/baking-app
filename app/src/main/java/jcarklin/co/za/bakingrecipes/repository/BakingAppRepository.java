@@ -21,6 +21,7 @@ import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
+import jcarklin.co.za.bakingrecipes.service.ShoppingListWidgetService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
@@ -47,8 +48,10 @@ public class BakingAppRepository {
     private final ConnectivityManager connectivityManager;
 
     private List<ShoppingList> shoppingLists = null;
+    private Context context;
 
     private BakingAppRepository(Application application) {
+        context = application;
         refresh = true;
         bakingAppDao = BakingAppDatabase.getInstance(application).bakingAppDao();
         recipes = bakingAppDao.getRecipesList();
@@ -104,7 +107,6 @@ public class BakingAppRepository {
                 }
                 //refreshShoppingList
                 shoppingLists = bakingAppDao.getShoppingLists();
-
             } catch (IOException e) {
                 e.printStackTrace();
                 status.postValue(new FetchStatus(FetchStatus.Status.CRITICAL_ERROR,R.string.error));
@@ -176,11 +178,12 @@ public class BakingAppRepository {
                     status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error_adding_to_shopping_list));
                 }
                 shoppingLists = bakingAppDao.getShoppingLists();
+                ShoppingListWidgetService.sendRefreshBroadcast(context);//todo does this work
             }
         });
     }
 
-    public String getShoppingList() {
+    public String getShoppingList() {//todo change to list so it can scroll in widget
 
         StringBuilder shoppingList = new StringBuilder();
         for (ShoppingList shList:shoppingLists) {

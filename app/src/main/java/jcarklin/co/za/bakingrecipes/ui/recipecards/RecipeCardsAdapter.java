@@ -73,7 +73,7 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
         @BindView(R.id.tv_number_servings)
         TextView numServings;
 
-//        @BindView(R.id.tv_number_ingredients)
+//        @BindView(R.id.tv_number_ingredients)todo
 //        TextView numIngredients;
 //
 //        @BindView(R.id.tv_number_steps)
