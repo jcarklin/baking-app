@@ -24,6 +24,7 @@ public class StepDetailsFragment extends Fragment {
     @BindView(R.id.pv_step_video)
     PlayerView playerView;
     @BindView(R.id.tv_step_description)
+    @Nullable
     TextView stepDescription;
 
     public StepDetailsFragment() {
@@ -67,7 +68,9 @@ public class StepDetailsFragment extends Fragment {
 
     private void populateUi() {
         playerView.setDefaultArtwork(getResources().getDrawable(R.drawable.ic_cake_black_48dp));
-        stepDescription.setText(selectedStep.getDescription());
+        if (stepDescription != null) {
+            stepDescription.setText(selectedStep.getDescription());
+        }
     }
 
 

@@ -83,11 +83,13 @@ public class StepDetailsNavigationFragment extends Fragment {
     }
 
     public void showPrevButton(int visibility) {
-        prevButton.setVisibility(visibility);
+        if (prevButton != null)
+            prevButton.setVisibility(visibility);
     }
 
     public void showNextButton(int visibility) {
-        nextButton.setVisibility(visibility);
+        if (nextButton != null)
+            nextButton.setVisibility(visibility);
     }
 
 }

@@ -2,12 +2,15 @@ package jcarklin.co.za.bakingrecipes.ui.stepdetails;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 
 import java.util.List;
 
@@ -66,16 +69,28 @@ public class StepDetailsActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         StepDetailsFragment stepDetailsFragment = StepDetailsFragment.newInstance();
         stepDetailsFragment.setStep(step);
+        int orientation = getResources().getConfiguration().orientation;
         if (getString(R.string.screen_type).equals("phone")) { //todo make constant
-            StepDetailsNavigationFragment navigation = (StepDetailsNavigationFragment) fragmentManager.findFragmentById(R.id.btns_next_prev);
-            if (navigation != null) {
-                navigation.showPrevButton(selectedStepIndex==0?View.INVISIBLE:View.VISIBLE);
-                navigation.showNextButton(selectedStepIndex==selectedRecipeSteps.size()-1?View.INVISIBLE:View.VISIBLE);
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                StepDetailsNavigationFragment navigation = (StepDetailsNavigationFragment) fragmentManager.findFragmentById(R.id.btns_next_prev);
+                if (navigation != null) {
+                    navigation.showPrevButton(selectedStepIndex==0?View.INVISIBLE:View.VISIBLE);
+                    navigation.showNextButton(selectedStepIndex==selectedRecipeSteps.size()-1?View.INVISIBLE:View.VISIBLE);
+                }
+            } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                if (Build.VERSION.SDK_INT < 16) {
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                } else {
+                    View decorView = getWindow().getDecorView();
+                    decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                    actionBar.hide();
+                }
             }
         }
         fragmentManager.beginTransaction()
-                .replace(R.id.step_details_fragment_container,stepDetailsFragment,FRAGMENT_STEP_DETAIL_WITH_VIDEO)
-                .commitNow();
+            .replace(R.id.step_details_fragment_container,stepDetailsFragment,FRAGMENT_STEP_DETAIL_WITH_VIDEO)
+            .commitNow();
     }
 
     @Override
