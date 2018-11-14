@@ -62,7 +62,7 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepList
             @Override
             public void onChanged(@Nullable FetchStatus fetchStatus) {
                 if (fetchStatus==null || fetchStatus.getStatus().equals(FetchStatus.Status.LOADING)) {
-                    //showProgressBar();
+                    //todo showProgressBar();
                 } else if (fetchStatus.getStatus().equals(FetchStatus.Status.TOAST)) {
                     showToast(getString(fetchStatus.getStatusMessage()));
                     recipeDetailsViewModel.clearStatus();
