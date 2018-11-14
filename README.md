@@ -1,2 +1,2 @@
 # baking-app
-Baking App progect for Udacity nanodegree
+Baking App project for Udacity nanodegree
