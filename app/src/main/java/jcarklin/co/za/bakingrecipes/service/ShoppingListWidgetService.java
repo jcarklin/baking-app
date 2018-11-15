@@ -45,7 +45,7 @@ public class ShoppingListWidgetService extends IntentService {
 
     public static void sendRefreshBroadcast(Context context) {//todo does this work
         Intent intent = new Intent(context, ShoppingListWidgetService.class);
-        intent.setAction(ACTION_UPDATE_SHOPPING_LIST);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         context.sendBroadcast(intent);
     }
 }

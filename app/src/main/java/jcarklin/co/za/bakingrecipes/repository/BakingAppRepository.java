@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -47,7 +48,7 @@ public class BakingAppRepository {
 
     private final ConnectivityManager connectivityManager;
 
-    private List<ShoppingList> shoppingLists = null;
+    private List<ShoppingList> shoppingLists = new ArrayList<>();
     private Context context;
 
     private BakingAppRepository(Application application) {
@@ -84,6 +85,7 @@ public class BakingAppRepository {
 
     private void refresh() {
         status.postValue(new FetchStatus(FetchStatus.Status.LOADING,null));
+        shoppingLists = bakingAppDao.getShoppingLists();
         if (refresh) {
             bakingAppDao.clearRecipes();
         }
@@ -105,8 +107,6 @@ public class BakingAppRepository {
                         status.postValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
                     }
                 }
-                //refreshShoppingList
-                shoppingLists = bakingAppDao.getShoppingLists();
             } catch (IOException e) {
                 e.printStackTrace();
                 status.postValue(new FetchStatus(FetchStatus.Status.CRITICAL_ERROR,R.string.error));
@@ -186,6 +186,7 @@ public class BakingAppRepository {
     public String getShoppingList() {//todo change to list so it can scroll in widget
 
         StringBuilder shoppingList = new StringBuilder();
+
         for (ShoppingList shList:shoppingLists) {
             shoppingList.append("<div>")
             .append("<h3>"+shList.getRecipeName()+"<h3>")

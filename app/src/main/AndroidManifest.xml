@@ -37,16 +37,6 @@
                 android:value=".ui.recipedetails.RecipeDetailsActivity" />
         </activity>
 
-        <!-- <service android:name=".WidgetService" -->
-        <!--
-         android:permission="android.permission.BIND_REMOTEVIEWS" />
-
-         <provider
-            android:name=".provider.PlantContentProvider"
-            android:authorities="com.example.android.mygarden"
-            android:exported="true" />
-        -->
-
         <receiver android:name=".ui.shoppinglist.ShoppingListWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
