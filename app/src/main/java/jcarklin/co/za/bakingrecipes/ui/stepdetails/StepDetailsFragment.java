@@ -113,6 +113,8 @@ public class StepDetailsFragment extends Fragment {
                         .placeholder(R.drawable.ic_cake_black_48dp)
                         .error(R.drawable.ic_cake_black_48dp)
                         .into(stepThumbnail);
+            } else {
+                stepThumbnail.setImageDrawable(getResources().getDrawable(R.drawable.ic_cake_black_48dp));
             }
         }
     }
