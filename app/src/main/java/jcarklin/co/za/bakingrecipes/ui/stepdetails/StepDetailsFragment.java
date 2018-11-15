@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -39,10 +40,8 @@ public class StepDetailsFragment extends Fragment {
     @BindView(R.id.pv_step_video)
     PlayerView playerView;
     @BindView(R.id.tv_step_description)
-    @Nullable
     TextView stepDescription;
     @BindView(R.id.step_thumbnail)
-    @Nullable
     ImageView stepThumbnail;
 
     private SimpleExoPlayer exoPlayer;
@@ -103,10 +102,12 @@ public class StepDetailsFragment extends Fragment {
         if (selectedStep.getVideoURL() != null && !selectedStep.getVideoURL().isEmpty()) {
             playerView.setVisibility(View.VISIBLE);
             stepThumbnail.setVisibility(View.GONE);
+            stepDescription.setVisibility(View.GONE);
             initializePlayer(Uri.parse(selectedStep.getVideoURL()));
         } else {
             playerView.setVisibility(View.GONE);
             stepThumbnail.setVisibility(View.VISIBLE);
+            stepDescription.setVisibility(View.VISIBLE);
             if (selectedStep.getThumbnailURL() != null && !selectedStep.getThumbnailURL().isEmpty()) {
                 Picasso.get()
                         .load(selectedStep.getThumbnailURL())
