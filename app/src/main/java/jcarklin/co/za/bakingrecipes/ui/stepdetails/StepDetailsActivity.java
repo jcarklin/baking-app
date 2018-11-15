@@ -28,6 +28,7 @@ public class StepDetailsActivity extends AppCompatActivity implements
     private int selectedStepIndex = 0;
     private RecipeDetailsViewModel recipeDetailsViewModel;
     private ActionBar actionBar;
+    private boolean createNewFragment = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,9 @@ public class StepDetailsActivity extends AppCompatActivity implements
                 populateUI();
             }
         });
+
+        createNewFragment = savedInstanceState==null;
+
         if (savedInstanceState != null && savedInstanceState.containsKey("stepIndex")) {
             selectedStepIndex = savedInstanceState.getInt("stepIndex");
         } else {
@@ -67,7 +71,10 @@ public class StepDetailsActivity extends AppCompatActivity implements
             actionBar.setSubtitle(step.getId()+" - " +step.getShortDescription());
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        StepDetailsFragment stepDetailsFragment = StepDetailsFragment.newInstance();
+        StepDetailsFragment stepDetailsFragment = (StepDetailsFragment) fragmentManager.findFragmentByTag(FRAGMENT_STEP_DETAIL_WITH_VIDEO);
+        if (stepDetailsFragment == null || createNewFragment) {
+            stepDetailsFragment = StepDetailsFragment.newInstance();
+        }
         stepDetailsFragment.setStep(step);
         int orientation = getResources().getConfiguration().orientation;
         if (getString(R.string.screen_type).equals("phone")) { //todo make constant
@@ -103,6 +110,7 @@ public class StepDetailsActivity extends AppCompatActivity implements
     public void onClick(int selectedStepIndex) {
         this.selectedStepIndex = selectedStepIndex;
         populateUI();
+        createNewFragment = true;
     }
 
     @Override
@@ -111,6 +119,7 @@ public class StepDetailsActivity extends AppCompatActivity implements
         if (selectedStepIndex==recipeDetailsViewModel.getSelectedRecipeSteps().size()) {
             selectedStepIndex--;
         }
+        createNewFragment = true;
         populateUI();
     }
 
@@ -119,6 +128,7 @@ public class StepDetailsActivity extends AppCompatActivity implements
         if (selectedStepIndex>0) {
             selectedStepIndex--;
         }
+        createNewFragment = true;
         populateUI();
     }
 }
