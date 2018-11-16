@@ -48,8 +48,16 @@
         </receiver>
 
         <service
-            android:name=".service.ShoppingListWidgetService"
-            android:exported="false"></service>
+            android:name=".service.WidgetListViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+        <service
+            android:name=".service.WidgetUpdateService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="jcarklin.co.za.bakingrecipes.service.action.update_widget_listview"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

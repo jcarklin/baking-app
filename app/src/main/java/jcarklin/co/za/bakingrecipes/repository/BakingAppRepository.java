@@ -22,7 +22,6 @@ import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
-import jcarklin.co.za.bakingrecipes.service.ShoppingListWidgetService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
@@ -178,23 +177,12 @@ public class BakingAppRepository {
                     status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error_adding_to_shopping_list));
                 }
                 shoppingLists = bakingAppDao.getShoppingLists();
-                ShoppingListWidgetService.sendRefreshBroadcast(context);//todo does this work
             }
         });
     }
 
-    public String getShoppingList() {//todo change to list so it can scroll in widget
-
-        StringBuilder shoppingList = new StringBuilder();
-
-        for (ShoppingList shList:shoppingLists) {
-            shoppingList.append("<div>")
-            .append("<h3>"+shList.getRecipeName()+"<h3>")
-            .append(shList.getShoppingList())
-            .append("</div>");
-        }
-
-        return shoppingList.toString();
+    public List<ShoppingList> getShoppingLists() {
+        return shoppingLists;
     }
 
     public void clearStatus() {
