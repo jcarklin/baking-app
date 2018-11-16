@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -18,7 +19,9 @@ import jcarklin.co.za.bakingrecipes.repository.api.BakingAppApi;
 import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDao;
 import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDatabase;
 import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
+import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
@@ -37,17 +40,24 @@ public class BakingAppRepository {
     private final Executor executor;
     private boolean refresh = true;
 
-    private final LiveData<List<RecipeComplete>> recipes;
     private final MutableLiveData<FetchStatus> status = new MutableLiveData<>();
+
+    private final LiveData<List<Recipe>> recipes;
+    private final MutableLiveData<RecipeComplete> selectedRecipe = new MutableLiveData<>();
 
     private final ConnectivityManager connectivityManager;
 
+    private List<ShoppingList> shoppingLists = new ArrayList<>();
+    private Context context;
+
     private BakingAppRepository(Application application) {
+        context = application;
+        refresh = true;
         bakingAppDao = BakingAppDatabase.getInstance(application).bakingAppDao();
-        recipes = bakingAppDao.fetchAllRecipes();
-        setupNetworkApi();
+        recipes = bakingAppDao.getRecipesList();
         executor = Executors.newSingleThreadExecutor();
         connectivityManager = (ConnectivityManager)application.getSystemService(Context.CONNECTIVITY_SERVICE);
+        setupNetworkApi();
     }
 
     public static BakingAppRepository getInstance(Application application) {
@@ -69,35 +79,39 @@ public class BakingAppRepository {
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build();
         bakingAppApi = retrofit.create(BakingAppApi.class);
+        refreshRecipes();
     }
 
     private void refresh() {
+        status.postValue(new FetchStatus(FetchStatus.Status.LOADING,null));
+        shoppingLists = bakingAppDao.getShoppingLists();
         if (refresh) {
             bakingAppDao.clearRecipes();
         }
-
-        if (bakingAppDao.getNumberOfRecipes()>0) {
+        if (bakingAppDao.getNumberOfRecipes() > 0) {
             Log.d(TAG, "Using database");
-            return;
-        }
+            status.postValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
+        } else {
+            try {
+                Response<List<RecipeComplete>> response = bakingAppApi.getRecipes().execute();
 
-        try {
-            Response<List<RecipeComplete>> response = bakingAppApi.getRecipes().execute();
-
-            List<RecipeComplete> recipeCompleteList = response.body();
-            if (recipeCompleteList != null) {
-                long[] insertedIds = bakingAppDao.insertCompleteRecipes(recipeCompleteList);
-                if (insertedIds == null || insertedIds.length != recipeCompleteList.size()) {
-                    Log.e(TAG, "Unable to insert");
-                } else {
-                    Log.d(TAG, "Data inserted");
-                    refresh = false;
+                List<RecipeComplete> recipeCompleteList = response.body();
+                if (recipeCompleteList != null) {
+                    long[] insertedIds = bakingAppDao.insertCompleteRecipes(recipeCompleteList);
+                    if (insertedIds == null || insertedIds.length != recipeCompleteList.size()) {
+                        Log.e(TAG, "Unable to insert");
+                        status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error));
+                    } else {
+                        Log.d(TAG, "Data inserted");
+                        status.postValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+                status.postValue(new FetchStatus(FetchStatus.Status.CRITICAL_ERROR,R.string.error));
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        refresh = false;
     }
 
     private boolean checkNetworkAvailability() {
@@ -105,7 +119,7 @@ public class BakingAppRepository {
         NetworkInfo networkInfo = connectivityManager==null ? null : connectivityManager.getActiveNetworkInfo();
         boolean available = true;
         if (networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
-            status.setValue(new FetchStatus(FetchStatus.Status.ERROR,R.string.network_unavailable));
+            status.setValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.network_unavailable));
             available = false;
         }
         return available;
@@ -115,8 +129,7 @@ public class BakingAppRepository {
         return status;
     }
 
-    public LiveData<List<RecipeComplete>> getRecipes() {
-        status.postValue(new FetchStatus(FetchStatus.Status.LOADING,null));
+    public LiveData<List<Recipe>> getRecipes() {
         if (checkNetworkAvailability()) {
             executor.execute(new Runnable() {
                 @Override
@@ -127,4 +140,54 @@ public class BakingAppRepository {
         }
         return recipes;
     }
+
+    public void refreshRecipes() {
+        refresh = true;
+        getRecipes();
+    }
+
+    public void setSelectedRecipe(final Integer recipeId) {
+        if (checkNetworkAvailability()) {
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    RecipeComplete recipeComplete = bakingAppDao.getRecipe(recipeId);
+                    if (recipeComplete != null) {
+                        selectedRecipe.postValue(recipeComplete);
+                    }
+                }
+            });
+        }
+
+    }
+
+    public LiveData<RecipeComplete> getSelectedRecipe() {
+        return selectedRecipe;
+    }
+
+    public void addToShoppingList(final ShoppingList shoppingList) {
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                long inserted = bakingAppDao.addShoppingList(shoppingList);
+                if (inserted > 0) {
+                    status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.added_to_shopping_list));
+                } else {
+                    status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error_adding_to_shopping_list));
+                }
+                shoppingLists = bakingAppDao.getShoppingLists();
+            }
+        });
+    }
+
+    public List<ShoppingList> getShoppingLists() {
+        return shoppingLists;
+    }
+
+    public void clearStatus() {
+        status.setValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
+    }
+
+
 }

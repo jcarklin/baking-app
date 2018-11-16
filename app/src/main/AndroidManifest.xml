@@ -13,14 +13,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.recipecards.MainActivity">
+        <activity
+            android:name=".ui.recipecards.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.recipedetails.RecipeDetailsActivity"
+            android:parentActivityName=".ui.recipecards.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.recipecards.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.stepdetails.StepDetailsActivity"
+            android:parentActivityName=".ui.recipedetails.RecipeDetailsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.recipedetails.RecipeDetailsActivity" />
+        </activity>
 
-        <service android:name=".repository.BakingAppIntentService" android:exported="false"/>
+        <receiver android:name=".ui.shoppinglist.ShoppingListWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/shopping_list_widget_info" />
+        </receiver>
+
+        <service
+            android:name=".service.WidgetListViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            android:exported="false" />
+        <service
+            android:name=".service.WidgetUpdateService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="jcarklin.co.za.bakingrecipes.service.action.update_widget_listview"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

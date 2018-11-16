@@ -13,14 +13,19 @@ import java.util.List;
 import jcarklin.co.za.bakingrecipes.repository.model.Ingredient;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
+import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
 import jcarklin.co.za.bakingrecipes.repository.model.Step;
 
 @Dao
 public abstract class BakingAppDao {
 
     @Query("SELECT * FROM recipes")
+    public abstract LiveData<List<Recipe>> getRecipesList();
+
     @Transaction
-    public abstract LiveData<List<RecipeComplete>> fetchAllRecipes();
+    @Query("SELECT * FROM recipes where id = :recipeId")
+    public abstract RecipeComplete getRecipe(Integer recipeId);
+
 
     @Query("SELECT COUNT(id) FROM recipes")
     public abstract int getNumberOfRecipes();
@@ -34,31 +39,37 @@ public abstract class BakingAppDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract List<Long> addSteps(List<Step> steps);
 
-    @Query("DELETE FROM recipes")
-    public abstract void clearRecipes();
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract long addShoppingList(ShoppingList shoppingList);
 
-    //@Query("SELECT * FROM ingredients WHERE shopping_list = 1")
-    //public abstract List<Ingredient> getShoppingList();
+    @Query("DELETE FROM recipes")
+    public abstract int clearRecipes();
 
     @Update
     public abstract int updateShoppingList(Ingredient ingredient);
 
+    @Query("SELECT * FROM shopping_list")
+    public abstract List<ShoppingList> getShoppingLists();
+
+    @Query("DELETE FROM shopping_list")
+    public abstract int clearShoppingList();
+
     @Transaction
     public long[] insertCompleteRecipes(List<RecipeComplete> recipes) {
         long[] ids = new long[recipes.size()];
-        RecipeComplete recipeComplete;
-        for (int i=0; i<recipes.size(); i++) {
-            recipeComplete = recipes.get(i);
-            for (Ingredient ingredient : recipeComplete.getIngredients()) {
-                ingredient.setRecipeId(recipeComplete.getId());
+            RecipeComplete recipeComplete;
+            for (int i = 0; i < recipes.size(); i++) {
+                recipeComplete = recipes.get(i);
+                for (Ingredient ingredient : recipeComplete.getIngredients()) {
+                    ingredient.setRecipeId(recipeComplete.getId());
+                }
+                for (Step step : recipeComplete.getSteps()) {
+                    step.setRecipeId(recipeComplete.getId());
+                }
+                ids[i] = addRecipe(recipeComplete);
+                addIngredients(recipeComplete.getIngredients());
+                addSteps(recipeComplete.getSteps());
             }
-            for (Step step : recipeComplete.getSteps()) {
-                step.setRecipeId(recipeComplete.getId());
-            }
-            ids[i] = addRecipe(recipeComplete);
-            addIngredients(recipeComplete.getIngredients());
-            addSteps(recipeComplete.getSteps());
-        }
         return ids;
     }
 }

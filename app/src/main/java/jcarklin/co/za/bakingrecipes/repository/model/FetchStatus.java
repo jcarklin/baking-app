@@ -3,7 +3,7 @@ package jcarklin.co.za.bakingrecipes.repository.model;
 public class FetchStatus {
 
     public enum Status {
-        SUCCESS, ERROR, LOADING
+        SUCCESS, CRITICAL_ERROR, TOAST, LOADING
     }
 
     private final Status status;

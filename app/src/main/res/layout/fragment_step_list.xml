@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:layout_centerVertical="false"
+    tools:context="jcarklin.co.za.bakingrecipes.ui.recipedetails.RecipeDetailsActivity">
+
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/rv_recipe_steps"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|top|center"
+    android:fadeScrollbars="false"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+</android.support.v7.widget.RecyclerView>
+</FrameLayout>
