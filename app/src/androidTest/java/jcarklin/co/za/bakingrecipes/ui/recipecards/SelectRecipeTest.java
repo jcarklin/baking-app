@@ -31,9 +31,26 @@ public class SelectRecipeTest {
 
     @Test
     public void scrollToItemBelowFold_checkItsText() {
+
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         onView(ViewMatchers.withId(R.id.rv_recipes))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
 
         onView(withText(RECIPE_HEADING_3)).check(matches(isDisplayed()));
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onView(ViewMatchers.withId(R.id.btn_add_to_list))
+                .check(matches(isDisplayed()));
+
     }
 }

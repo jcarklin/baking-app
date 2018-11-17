@@ -98,9 +98,7 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
                         .error(R.drawable.ic_cake_black_48dp)
                         .into(recipeThumbnail);
             }
-            numServings.setText(context.getString(R.string.number_of_servings) +" " + recipe.getServings());
-//            numIngredients.setText("Number of Ingredients: " + recipe.getIngredients().size());
-//            numSteps.setText("Number of Steps: " + recipe.getSteps().size());
+            numServings.setText(context.getString(R.string.number_of_servings, String.valueOf(recipe.getServings())));
         }
 
         @Override

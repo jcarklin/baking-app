@@ -51,7 +51,7 @@
 
         <Button
             android:id="@+id/btn_add_to_list"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

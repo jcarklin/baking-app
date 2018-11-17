@@ -2,8 +2,7 @@
 <FrameLayout android:id="@+id/image_or_video_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/pv_step_video"
             android:layout_width="match_parent"
@@ -23,6 +22,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_cake_black_48dp"
             android:layout_gravity="center_vertical|center_horizontal"
+            android:contentDescription="@string/recipe_step_thumbnail_image"
             android:visibility="gone"
             />
         <TextView

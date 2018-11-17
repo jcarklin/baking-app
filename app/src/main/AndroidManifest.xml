@@ -56,7 +56,7 @@
             android:name=".provider.BakingAppContentProvider"
             android:authorities="jcarklin.co.za.bakingrecipes"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
     </application>
 

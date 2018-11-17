@@ -11,6 +11,7 @@ import android.support.v4.app.JobIntentService;
 import java.util.ArrayList;
 import java.util.List;
 
+import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
 import jcarklin.co.za.bakingrecipes.ui.widget.ShoppingListAppWidgetProvider;
 
@@ -27,7 +28,6 @@ public class WidgetUpdateService extends JobIntentService {
     public static void startActionRefreshShoppingList(Context context) {
         Intent intent = new Intent(context, WidgetUpdateService.class);
         intent.setAction(ACTION_REFRESH);
-        //context.startService(intent);
         enqueueWork(context, WidgetUpdateService.class, 1, intent);
     }
 
@@ -71,7 +71,11 @@ public class WidgetUpdateService extends JobIntentService {
             }finally {
                 cursor.close();
             }
-
+        } else {
+            String recipeName = "";
+            String shopping = getString(R.string.empty_shopping_list_message);
+            shoppingLists = new ArrayList<>(1);
+            shoppingLists.add(new ShoppingList(null,recipeName,shopping));
         }
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, ShoppingListAppWidgetProvider.class));

@@ -22,6 +22,7 @@ import jcarklin.co.za.bakingrecipes.repository.model.FetchStatus;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
+import jcarklin.co.za.bakingrecipes.service.WidgetUpdateService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
@@ -47,8 +48,10 @@ public class BakingAppRepository {
     private final ConnectivityManager connectivityManager;
 
     private List<ShoppingList> shoppingLists = new ArrayList<>();
+    private Context context;
 
     private BakingAppRepository(Application application) {
+        context = application.getApplicationContext();
         bakingAppDao = BakingAppDatabase.getInstance(application).bakingAppDao();
         recipes = bakingAppDao.getRecipesList();
         executor = Executors.newSingleThreadExecutor();
@@ -167,6 +170,7 @@ public class BakingAppRepository {
                 long inserted = bakingAppDao.addShoppingList(shoppingList);
                 if (inserted > 0) {
                     status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.added_to_shopping_list));
+                    WidgetUpdateService.startActionRefreshShoppingList(context);
                 } else {
                     status.postValue(new FetchStatus(FetchStatus.Status.TOAST,R.string.error_adding_to_shopping_list));
                 }
@@ -184,4 +188,13 @@ public class BakingAppRepository {
     }
 
 
+    public void clearShoppingList() {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                bakingAppDao.clearShoppingList();
+                WidgetUpdateService.startActionRefreshShoppingList(context);
+            }
+        });
+    }
 }

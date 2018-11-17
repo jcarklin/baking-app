@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="number_of_servings">Number of Servings:</string>
+    <string name="app_name">BakingRecipes</string>
+    <string name="error">An error has occurred while fetching recipes.</string>
+    <string name="network_unavailable">Cannot refresh data. Network is currently unavailable.</string>
+    <string name="number_of_servings">Number of Servings: %1$s </string>
     <string name="title_activity_refresh">Refresh</string>
     <string name="title_activity_shopping_list">View Shopping List</string>
     <string name="ingredients">Ingredients</string>
     <string name="add_to_shopping_list">Add to Shopping List</string>
+    <string name="added_to_shopping_list">Successfully added ingredients to shopping list</string>
+    <string name="error_adding_to_shopping_list">Failed to add ingredients to shopping list</string>
+    <string name="previous_step">Previous</string>
+    <string name="next_step">Next</string>
+    <string name="recipe_step_thumbnail_image">Recipe details thumbnail image</string>
+    <string name="recipe_card">Recipe Card</string>
+    <string name="right_arrow">right arrow</string>
+    <string name="empty_shopping_list_message">Add a recipe to your shopping list and it will appear here.  If you add more than one recipe to your list, add new widgets to see each recipe!</string>
     <string name="clear_shopping_list">Clear shopping list</string>
-    <string name="confirm_clear_shopping_list">Are you sure you want to clear your shopping list?</string>
 </resources>

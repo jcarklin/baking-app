@@ -38,4 +38,8 @@ public class RecipeCardsViewModel extends AndroidViewModel {
     public void refresh() {
         bakingAppRepository.refreshRecipes(true);
     }
+
+    public void clearShoppingList() {
+        bakingAppRepository.clearShoppingList();
+    }
 }

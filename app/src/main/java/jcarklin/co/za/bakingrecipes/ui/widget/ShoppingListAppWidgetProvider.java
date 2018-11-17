@@ -44,14 +44,16 @@ public class ShoppingListAppWidgetProvider extends AppWidgetProvider {
                                                  List<ShoppingList> shoppingLists, int[] appWidgetIds) {
         ShoppingList shoppingList;
         int appWidgetId;
-        for (int i=0; i<appWidgetIds.length; i++ ) {
-            appWidgetId = appWidgetIds[i];
-            if(shoppingLists.size()>=i) {
-                shoppingList = shoppingLists.get(i);
-            } else {
-                shoppingList = shoppingLists.get(shoppingLists.size()-1);
+        if (shoppingLists != null) {
+            for (int i = 0; i < appWidgetIds.length; i++) {
+                appWidgetId = appWidgetIds[i];
+                if (shoppingLists.size() > i) {
+                    shoppingList = shoppingLists.get(i);
+                } else {
+                    shoppingList = shoppingLists.get(shoppingLists.size() - 1);
+                }
+                updateShoppingListWidget(context, appWidgetManager, shoppingList, appWidgetId);
             }
-            updateShoppingListWidget(context, appWidgetManager, shoppingList, appWidgetId);
         }
     }
 
