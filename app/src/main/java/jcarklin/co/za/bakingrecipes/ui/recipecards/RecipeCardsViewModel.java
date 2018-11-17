@@ -36,6 +36,6 @@ public class RecipeCardsViewModel extends AndroidViewModel {
     }
 
     public void refresh() {
-        bakingAppRepository.refreshRecipes();
+        bakingAppRepository.refreshRecipes(true);
     }
 }
