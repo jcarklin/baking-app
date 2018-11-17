@@ -192,8 +192,11 @@ public class BakingAppRepository {
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                bakingAppDao.clearShoppingList();
-                WidgetUpdateService.startActionRefreshShoppingList(context);
+                int count = bakingAppDao.clearShoppingList();
+                status.postValue(new FetchStatus(FetchStatus.Status.TOAST, R.string.shopping_list_has_been_cleared));
+                if (count>0) {
+                    WidgetUpdateService.startActionRefreshShoppingList(context);
+                }
             }
         });
     }

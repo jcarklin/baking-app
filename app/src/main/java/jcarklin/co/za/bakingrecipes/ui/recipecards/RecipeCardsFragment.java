@@ -101,6 +101,7 @@ public class RecipeCardsFragment extends Fragment implements RecipeCardsAdapter.
                     showProgressBar();
                 } else if (fetchStatus.getStatus().equals(FetchStatus.Status.TOAST)) {
                     showToast(getString(fetchStatus.getStatusMessage()));
+                    recipeCardsViewModel.clearStatus();
                 } else if (fetchStatus.getStatus().equals(FetchStatus.Status.CRITICAL_ERROR)) {
                     showError();
                 } else {

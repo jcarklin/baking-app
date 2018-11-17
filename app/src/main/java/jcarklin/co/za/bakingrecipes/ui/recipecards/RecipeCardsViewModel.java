@@ -42,4 +42,8 @@ public class RecipeCardsViewModel extends AndroidViewModel {
     public void clearShoppingList() {
         bakingAppRepository.clearShoppingList();
     }
+
+    public void clearStatus() {
+        bakingAppRepository.clearStatus();
+    }
 }

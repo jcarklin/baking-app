@@ -17,4 +17,5 @@
     <string name="right_arrow">right arrow</string>
     <string name="empty_shopping_list_message">Add a recipe to your shopping list and it will appear here.  If you add more than one recipe to your list, add new widgets to see each recipe!</string>
     <string name="clear_shopping_list">Clear shopping list</string>
+    <string name="shopping_list_has_been_cleared">Shopping list has been cleared!</string>
 </resources>
