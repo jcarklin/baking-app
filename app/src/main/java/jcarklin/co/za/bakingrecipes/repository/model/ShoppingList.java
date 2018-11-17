@@ -1,16 +1,27 @@
 package jcarklin.co.za.bakingrecipes.repository.model;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@Entity(tableName = "shopping_list")
+import static jcarklin.co.za.bakingrecipes.repository.model.ShoppingList.TABLE_NAME;
+
+@Entity(tableName = TABLE_NAME)
 public class ShoppingList implements Parcelable {
 
+    public static final String TABLE_NAME = "shopping_list";
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_RECIPE_NAME = "recipe_name";
+    public static final String COLUMN_SHOPPING_LIST = "shopping_list_items";
+
     @PrimaryKey
+    @ColumnInfo(name = COLUMN_ID)
     protected Integer id;
+    @ColumnInfo(name = COLUMN_RECIPE_NAME)
     protected String recipeName;
+    @ColumnInfo(name = COLUMN_SHOPPING_LIST)
     protected String shoppingList;
 
     public ShoppingList(Integer id, String recipeName, String shoppingList) {

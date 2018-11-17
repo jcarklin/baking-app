@@ -1,6 +1,7 @@
 package jcarklin.co.za.bakingrecipes.service;
 
 import android.content.Context;
+import android.text.Html;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -9,14 +10,13 @@ import java.util.List;
 import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.model.ShoppingList;
 
-public class BakingAppRemoteView implements RemoteViewsService.RemoteViewsFactory {
+public class WidgetListViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private List<ShoppingList> shoppingLists;
     private Context context;
+    private List<ShoppingList> shoppingLists;
 
-    public BakingAppRemoteView(Context applicationContext, List<ShoppingList> shoppingLists) {
-        this.shoppingLists = shoppingLists;
-        this.context = applicationContext;
+    public WidgetListViewsFactory(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -41,14 +41,12 @@ public class BakingAppRemoteView implements RemoteViewsService.RemoteViewsFactor
 
     @Override
     public RemoteViews getViewAt(int i) {
-        RemoteViews remoteViews =
-                new RemoteViews(context.getPackageName(), R.layout.item_shopping_list);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.shopping_list_item);
 
-        ShoppingList shoppingList = shoppingLists.get(i);
-        remoteViews.setTextViewText(R.id.tv_recipe_name, shoppingList.getRecipeName());
-        remoteViews.setTextViewText(R.id.tv_shopping_list, shoppingList.getShoppingList());
+        views.setTextViewText(R.id.tv_recipe_title, shoppingLists.get(i).getRecipeName());
+        views.setTextViewText(R.id.tv_shopping_list, Html.fromHtml(shoppingLists.get(i).getShoppingList()));
 
-        return remoteViews;
+        return views;
     }
 
     @Override

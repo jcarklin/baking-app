@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
+import android.database.Cursor;
 
 import java.util.List;
 
@@ -51,8 +52,18 @@ public abstract class BakingAppDao {
     @Query("SELECT * FROM shopping_list")
     public abstract List<ShoppingList> getShoppingLists();
 
+    @Query("SELECT * FROM shopping_list")
+    public abstract Cursor getShoppingListsCursor();
+
+    @Transaction
+    @Query("SELECT * FROM shopping_list where id = :recipeId")
+    public abstract Cursor getShoppingList(Long recipeId);
+
     @Query("DELETE FROM shopping_list")
     public abstract int clearShoppingList();
+
+    @Query("DELETE FROM shopping_list where id = :recipeId")
+    public abstract int deleteShoppingListById(Long recipeId);
 
     @Transaction
     public long[] insertCompleteRecipes(List<RecipeComplete> recipes) {

@@ -37,27 +37,30 @@
                 android:value=".ui.recipedetails.RecipeDetailsActivity" />
         </activity>
 
-        <receiver android:name=".ui.shoppinglist.ShoppingListWidgetProvider">
+        <receiver android:name=".ui.widget.ShoppingListAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/shopping_list_widget_info" />
+                android:resource="@xml/shopping_list_info" />
         </receiver>
 
         <service
-            android:name=".service.WidgetListViewService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"
-            android:exported="false" />
-        <service
             android:name=".service.WidgetUpdateService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="jcarklin.co.za.bakingrecipes.service.action.update_widget_listview"/>
-            </intent-filter>
-        </service>
+            android:exported="false" />
+
+        <provider
+            android:name=".provider.BakingAppContentProvider"
+            android:authorities="jcarklin.co.za.bakingrecipes"
+            android:enabled="true"
+            android:exported="true" />
+
+        <service
+            android:name=".service.WidgetListViewService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

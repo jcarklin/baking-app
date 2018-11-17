@@ -20,4 +20,5 @@
     <string name="confirm_clear_shopping_list">Are you sure you want to clear your shopping list?</string>
     <string name="previous_step">Previous</string>
     <string name="next_step">Next</string>
+    <string name="configure">Configure</string>
 </resources>
