@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import androidx.test.espresso.idling.CountingIdlingResource;
 import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.api.BakingAppApi;
 import jcarklin.co.za.bakingrecipes.repository.db.BakingAppDao;
@@ -46,7 +47,7 @@ public class BakingAppRepository {
     private final MutableLiveData<RecipeComplete> selectedRecipe = new MutableLiveData<>();
 
     private final ConnectivityManager connectivityManager;
-
+    private final CountingIdlingResource countingIdlingResource = new CountingIdlingResource("Network_Call");
     private List<ShoppingList> shoppingLists = new ArrayList<>();
     private Context context;
 
@@ -78,11 +79,11 @@ public class BakingAppRepository {
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build();
         bakingAppApi = retrofit.create(BakingAppApi.class);
-        refreshRecipes(false);
+//        refreshRecipes(false);
     }
 
     public void refreshRecipes(final boolean isRefresh) {
-
+        countingIdlingResource.increment();
         if (checkNetworkAvailability()) {
             executor.execute(new Runnable() {
                 @Override
@@ -126,6 +127,7 @@ public class BakingAppRepository {
             status.postValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
         }
         shoppingLists = bakingAppDao.getShoppingLists();
+        countingIdlingResource.decrement();
     }
 
     private boolean checkNetworkAvailability() {
@@ -199,5 +201,9 @@ public class BakingAppRepository {
                 }
             }
         });
+    }
+
+    public CountingIdlingResource getCountingIdlingResource() {
+        return countingIdlingResource;
     }
 }
