@@ -1,12 +1,16 @@
 package jcarklin.co.za.bakingrecipes.ui.recipecards;
 
 
+import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,33 +28,40 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @LargeTest
 public class SelectRecipeTest {
 
+    private static final String RECIPE_HEADING_1 = "Nutella Pie";
     private static final String RECIPE_HEADING_3 = "Cheesecake";
+
+    private CountingIdlingResource idlingResource;
 
     @Rule
     public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
-    @Test
-    public void scrollToItemBelowFold_checkItsText() {
+    @Before
+    public void registerIdlingResource() {
+        idlingResource = mainActivityTestRule.getActivity().getIdlingResource();
+        IdlingRegistry.getInstance().register(idlingResource);
+    }
 
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    @Test
+    public void scrollToItemAndClick() {
+
+        onView(withText(RECIPE_HEADING_1)).check(matches(isDisplayed()));
 
         onView(ViewMatchers.withId(R.id.rv_recipes))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
 
         onView(withText(RECIPE_HEADING_3)).check(matches(isDisplayed()));
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         onView(ViewMatchers.withId(R.id.btn_add_to_list))
                 .check(matches(isDisplayed()));
 
+    }
+
+    @After
+    public void unregisterIdlingResource() {
+        if (idlingResource != null) {
+            IdlingRegistry.getInstance().unregister(idlingResource);
+        }
     }
 }

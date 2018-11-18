@@ -4,6 +4,7 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
+import android.support.test.espresso.idling.CountingIdlingResource;
 
 import java.util.List;
 
@@ -45,5 +46,9 @@ public class RecipeCardsViewModel extends AndroidViewModel {
 
     public void clearStatus() {
         bakingAppRepository.clearStatus();
+    }
+
+    public CountingIdlingResource getIdlingResource() {
+        return bakingAppRepository.getIdlingResources();
     }
 }

@@ -2,6 +2,9 @@ package jcarklin.co.za.bakingrecipes.ui.recipecards;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -12,7 +15,6 @@ import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
 
 public class MainActivity extends AppCompatActivity  {
-    public static final String ACTION_CLEAR_SHOPPING_LIST = "clear_shopping_list";
 
     private RecipeCardsViewModel recipeCardsViewModel;
 
@@ -58,4 +60,9 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
+    @VisibleForTesting
+    @NonNull
+    public CountingIdlingResource getIdlingResource() {
+        return recipeCardsViewModel.getIdlingResource();
+    }
 }

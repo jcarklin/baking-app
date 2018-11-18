@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.util.Log;
 
 import java.io.IOException;
@@ -50,6 +51,8 @@ public class BakingAppRepository {
     private List<ShoppingList> shoppingLists = new ArrayList<>();
     private Context context;
 
+    private final CountingIdlingResource countingIdlingResource = new CountingIdlingResource("Refresh_Recipes");;
+
     private BakingAppRepository(Application application) {
         context = application.getApplicationContext();
         bakingAppDao = BakingAppDatabase.getInstance(application).bakingAppDao();
@@ -78,7 +81,6 @@ public class BakingAppRepository {
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build();
         bakingAppApi = retrofit.create(BakingAppApi.class);
-        refreshRecipes(false);
     }
 
     public void refreshRecipes(final boolean isRefresh) {
@@ -101,6 +103,7 @@ public class BakingAppRepository {
     }
 
     private void refresh(boolean refresh) {
+        countingIdlingResource.increment();
         status.postValue(new FetchStatus(FetchStatus.Status.LOADING,null));
         if (refresh || bakingAppDao.getNumberOfRecipes() == 0) {
             try {
@@ -115,7 +118,6 @@ public class BakingAppRepository {
                     } else {
                         Log.d(TAG, "Data inserted");
                         status.postValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
-                        refresh = false;
                     }
                 }
             } catch (IOException e) {
@@ -126,6 +128,7 @@ public class BakingAppRepository {
             status.postValue(new FetchStatus(FetchStatus.Status.SUCCESS,null));
         }
         shoppingLists = bakingAppDao.getShoppingLists();
+        countingIdlingResource.decrement();
     }
 
     private boolean checkNetworkAvailability() {
@@ -199,5 +202,9 @@ public class BakingAppRepository {
                 }
             }
         });
+    }
+
+    public CountingIdlingResource getIdlingResources() {
+        return countingIdlingResource;
     }
 }
