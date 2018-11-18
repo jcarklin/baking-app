@@ -19,8 +19,6 @@ import butterknife.ButterKnife;
 import jcarklin.co.za.bakingrecipes.R;
 import jcarklin.co.za.bakingrecipes.repository.model.Recipe;
 
-import static jcarklin.co.za.bakingrecipes.BakingApplication.test;
-
 public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.RecipeCardViewHolder> {
 
     private List<Recipe> recipeList = new ArrayList<>();
@@ -73,13 +71,6 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
         @BindView(R.id.tv_number_servings)
         TextView numServings;
 
-//        @BindView(R.id.tv_number_ingredients)todo
-//        TextView numIngredients;
-//
-//        @BindView(R.id.tv_number_steps)
-//        TextView numSteps;
-
-
         RecipeCardViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
@@ -88,9 +79,6 @@ public class RecipeCardsAdapter extends RecyclerView.Adapter<RecipeCardsAdapter.
 
         public void bind(Recipe recipe) {
             recipeName.setText(recipe.getName());
-            if (test){
-                recipe.setImage("https://food.fnr.sndimg.com/content/dam/images/food/fullset/2013/12/9/0/FNK_Cheesecake_s4x3.jpg.rend.hgtvcom.826.620.suffix/1387411272847.jpeg");
-            }
             if (!recipe.getImage().isEmpty()) {
                 Picasso.get()
                         .load(recipe.getImage())

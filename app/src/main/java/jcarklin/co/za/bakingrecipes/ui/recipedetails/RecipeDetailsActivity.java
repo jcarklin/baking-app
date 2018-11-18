@@ -20,8 +20,6 @@ import jcarklin.co.za.bakingrecipes.repository.model.RecipeComplete;
 import jcarklin.co.za.bakingrecipes.ui.stepdetails.StepDetailsActivity;
 import jcarklin.co.za.bakingrecipes.ui.stepdetails.StepListAdapter;
 
-import static jcarklin.co.za.bakingrecipes.BakingApplication.test;
-
 public class RecipeDetailsActivity extends AppCompatActivity implements StepListAdapter.RecipeStepOnClickHandler{
 
     private RecipeDetailsViewModel recipeDetailsViewModel;
@@ -46,9 +44,6 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepList
                     actionBar.setTitle(recipe.getName());
                     actionBar.setSubtitle(getString(R.string.number_of_servings, String.valueOf(recipe.getServings())));
                 }
-                if (test){
-                    recipe.setImage("https://food.fnr.sndimg.com/content/dam/images/food/fullset/2013/12/9/0/FNK_Cheesecake_s4x3.jpg.rend.hgtvcom.826.620.suffix/1387411272847.jpeg");
-                }
                 if (recipe.getImage() != null && !recipe.getImage().isEmpty()) {
                     Picasso.get()
                             .load(recipe.getImage())
@@ -61,18 +56,12 @@ public class RecipeDetailsActivity extends AppCompatActivity implements StepList
         recipeDetailsViewModel.getStatus().observe(this, new Observer<FetchStatus>() {
             @Override
             public void onChanged(@Nullable FetchStatus fetchStatus) {
-                if (fetchStatus==null || fetchStatus.getStatus().equals(FetchStatus.Status.LOADING)) {
-                    //todo showProgressBar();
-                } else if (fetchStatus.getStatus().equals(FetchStatus.Status.TOAST)) {
+                if (fetchStatus.getStatus().equals(FetchStatus.Status.TOAST)) {
                     showToast(getString(fetchStatus.getStatusMessage()));
                     recipeDetailsViewModel.clearStatus();
-                } else if (fetchStatus.getStatus().equals(FetchStatus.Status.CRITICAL_ERROR)) {
-                    //showError();
-                } else {
-                    //showRecipeDetails();
                 }
             }
-        });//todo
+        });
     }
 
     private void showToast(String message) {

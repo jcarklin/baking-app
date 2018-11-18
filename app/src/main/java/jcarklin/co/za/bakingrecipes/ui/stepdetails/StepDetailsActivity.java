@@ -77,7 +77,7 @@ public class StepDetailsActivity extends AppCompatActivity implements
         }
         stepDetailsFragment.setStep(step);
         int orientation = getResources().getConfiguration().orientation;
-        if (getString(R.string.screen_type).equals("phone")) { //todo make constant
+        if (getString(R.string.screen_type).equals("phone")) {
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
                 StepDetailsNavigationFragment navigation = (StepDetailsNavigationFragment) fragmentManager.findFragmentById(R.id.btns_next_prev);
                 if (navigation != null) {
