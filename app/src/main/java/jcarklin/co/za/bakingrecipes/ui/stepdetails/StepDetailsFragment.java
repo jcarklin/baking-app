@@ -1,16 +1,13 @@
 package jcarklin.co.za.bakingrecipes.ui.stepdetails;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -52,8 +49,7 @@ public class StepDetailsFragment extends Fragment {
     }
 
     public static StepDetailsFragment newInstance() {
-        StepDetailsFragment fragment = new StepDetailsFragment();
-        return fragment;
+        return new StepDetailsFragment();
     }
 
     @Override
@@ -76,17 +72,6 @@ public class StepDetailsFragment extends Fragment {
         ButterKnife.bind(this,view);
         playerView.setDefaultArtwork(getResources().getDrawable(R.drawable.ic_cake_black_48dp));
         return view;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -154,16 +139,6 @@ public class StepDetailsFragment extends Fragment {
             exoPlayer.release();
             exoPlayer = null;
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     public void setStep(Step step) {

@@ -20,7 +20,6 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.Recipe
 
     private List<Step> stepList = new ArrayList<>();
     private final RecipeStepOnClickHandler recipeStepOnClickHandler;
-    private Context context;
 
     public interface RecipeStepOnClickHandler {
         void onClick(int selectedStepIndex);
@@ -38,7 +37,7 @@ public class StepListAdapter extends RecyclerView.Adapter<StepListAdapter.Recipe
     @NonNull
     @Override
     public RecipeStepsViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        context = viewGroup.getContext();
+        Context context = viewGroup.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_step_list, viewGroup, false);
         return new RecipeStepsViewHolder(view);

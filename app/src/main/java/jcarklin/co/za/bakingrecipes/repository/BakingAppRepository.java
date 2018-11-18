@@ -51,7 +51,7 @@ public class BakingAppRepository {
     private List<ShoppingList> shoppingLists = new ArrayList<>();
     private Context context;
 
-    private final CountingIdlingResource countingIdlingResource = new CountingIdlingResource("Refresh_Recipes");;
+    private final CountingIdlingResource countingIdlingResource = new CountingIdlingResource("Refresh_Recipes");
 
     private BakingAppRepository(Application application) {
         context = application.getApplicationContext();

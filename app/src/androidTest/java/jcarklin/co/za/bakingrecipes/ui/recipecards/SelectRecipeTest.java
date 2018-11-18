@@ -34,7 +34,7 @@ public class SelectRecipeTest {
     private CountingIdlingResource idlingResource;
 
     @Rule
-    public ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public final ActivityTestRule<MainActivity> mainActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void registerIdlingResource() {
@@ -56,6 +56,11 @@ public class SelectRecipeTest {
         onView(ViewMatchers.withId(R.id.btn_add_to_list))
                 .check(matches(isDisplayed()));
 
+        onView(ViewMatchers.withId(R.id.rv_recipe_steps))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
+
+        onView(ViewMatchers.withId(R.id.tv_step_description))
+                .check(matches(isDisplayed()));
     }
 
     @After

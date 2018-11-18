@@ -33,14 +33,7 @@ public class StepDetailsNavigationFragment extends Fragment {
     }
 
     public static StepDetailsNavigationFragment newInstance() {
-        StepDetailsNavigationFragment fragment = new StepDetailsNavigationFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+        return new StepDetailsNavigationFragment();
     }
 
     @Override
@@ -75,11 +68,6 @@ public class StepDetailsNavigationFragment extends Fragment {
         } catch (ClassCastException cce) {
             throw new ClassCastException(context.toString() + " must implement StepDetailNavigationOnClickHandler");
         }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     public void showPrevButton(int visibility) {

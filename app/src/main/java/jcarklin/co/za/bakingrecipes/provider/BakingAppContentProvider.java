@@ -21,7 +21,7 @@ public class BakingAppContentProvider extends ContentProvider {
     public BakingAppContentProvider() {
     }
 
-    public static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(BakingAppContract.AUTHORITY, ShoppingList.TABLE_NAME, SHOPPING_LISTS);
         uriMatcher.addURI(BakingAppContract.AUTHORITY, ShoppingList.TABLE_NAME + "/#", SHOPPING_LIST_WITH_ID);

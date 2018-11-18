@@ -46,11 +46,6 @@ public class IngredientsFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ingredients = "";
@@ -85,7 +80,7 @@ public class IngredientsFragment extends Fragment {
         ingredientsList.setText(Html.fromHtml(ingredients));
     }
 
-    public void addToShoppingList() {
+    private void addToShoppingList() {
         recipeDetailsViewModel.addToShoppingList(ingredients);
     }
 
