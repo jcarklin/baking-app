@@ -1,12 +1,12 @@
 package jcarklin.co.za.bakingrecipes.service;
 
+import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v4.app.JobIntentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,22 +18,23 @@ import jcarklin.co.za.bakingrecipes.ui.widget.ShoppingListAppWidgetProvider;
 import static jcarklin.co.za.bakingrecipes.provider.BakingAppContract.CONTENT_URI;
 
 
-public class WidgetUpdateService extends JobIntentService {
+public class WidgetUpdateService extends IntentService {
 
     public static final String ACTION_REFRESH = "jcarklin.co.za.bakingrecipes.repository.service.action.refresh_shopping_list";
 
     public WidgetUpdateService() {
+        super("WidgetUpdateService");
     }
 
     public static void startActionRefreshShoppingList(Context context) {
         Intent intent = new Intent(context, WidgetUpdateService.class);
         intent.setAction(ACTION_REFRESH);
-        enqueueWork(context, WidgetUpdateService.class, 1, intent);
+        context.startService(intent);
     }
 
 
     @Override
-    protected void onHandleWork(Intent intent) {
+    protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_REFRESH.equals(action)) {

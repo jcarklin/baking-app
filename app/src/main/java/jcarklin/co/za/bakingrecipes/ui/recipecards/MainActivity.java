@@ -49,8 +49,10 @@ public class MainActivity extends AppCompatActivity  {
             case R.id.action_shopping_list:
                 Toast toast = Toast.makeText(this, "This will show a shopping list", Toast.LENGTH_SHORT);
                 toast.show();
+                return true;
             case R.id.action_clear_shopping_list:
                 recipeCardsViewModel.clearShoppingList();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
